@@ -1,0 +1,22 @@
+*,
+*::after,
+*::before {
+    // performing basic reset operation
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    // indicate 1rem = 10px;
+    font-size: 62.5%;
+}
+
+body {
+    // setting the overall font-family
+    font-family: 'Open Sans', sans-serif;
+}
+
+p {
+    font-size: 2rem;
+}
