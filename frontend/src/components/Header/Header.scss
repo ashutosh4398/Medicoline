@@ -43,7 +43,7 @@
     .active {
         background-color: $color-navbar-light;
         transition: all .5s;
-        border-bottom: 1px solid $color-navbar-border;
+        border-bottom: 1px solid $color-grey-dark;
         padding: 0 3rem;
         position: fixed;
     }
@@ -80,6 +80,7 @@
 
         &:hover::after {
             width: 70%;
+            
         }
     }
 

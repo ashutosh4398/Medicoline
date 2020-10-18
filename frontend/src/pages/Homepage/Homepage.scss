@@ -1,8 +1,22 @@
+@import '../../sass/variables';
+
 .features {
-    padding: 5rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-items: center;
+    padding: 20rem 2rem;
+    
+    margin: 25rem 0;
+    // background-image: linear-gradient(to right bottom, $color-light-green, $color-dark-green);
+    // background-image: linear-gradient(to right bottom, rgba($color-light-green,.9) 50%, rgba($color-dark-green,.9) ), url(../../assets/dna.jpg);
+    background-image: linear-gradient(to right bottom, rgba($color-gradient-blue-light,.9) 50%, rgba($color-gradient-blue-dark,.9) ), url(../../assets/dna.jpg);
+    background-size: cover;
+
+    transform: skewY(-12deg);
+
+    &__holder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        align-items: center;
+        transform: skewY(12deg);
+    }
 }

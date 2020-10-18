@@ -1,11 +1,32 @@
+@import '../../sass/variables';
+
 .feature-card {
 
-    
-    border: 2px solid black;
-    flex: 0 0 35rem;
+    flex: 0 0 30rem;
     padding: 3rem;
     margin-top: .5rem;
+
+    // all cards should have equal height
     align-self: stretch;
+
+    cursor: pointer;
+
+    background-color: rgba($color-white,.75);
+    border-radius: 1rem;
+
+    box-shadow: 0 1.3rem 3rem rgba($color-black,.4);
+
+    transition: all .4s;
+    // margin-right: 2.3rem;
+    margin: auto;
+    margin-bottom: 2rem;
+
+    
+
+    &:hover {
+        transform: translateY(-1rem);
+        box-shadow: 0 1.3rem 3rem rgba($color-black,.7);
+    }
 
     &__image {
         height: 13rem;
@@ -28,18 +49,9 @@
         padding: 1.5rem 0;
     }
 
-    
-
-    @media only screen and (max-width: 900px) {
-        flex: 0 0 50%;
-    }
 
     @media only screen and (max-width: 600px) {
         flex: 0 0 100%;
-    }
-
-    &:not(:last-child) {
-        margin-right: .5rem;
     }
 }
 
