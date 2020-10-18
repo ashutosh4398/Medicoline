@@ -10,13 +10,12 @@
 html {
     // indicate 1rem = 10px;
     font-size: 62.5%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 body {
     // setting the overall font-family
     font-family: 'Open Sans', sans-serif;
-}
-
-p {
-    font-size: 2rem;
+    line-height: 1.7;
 }

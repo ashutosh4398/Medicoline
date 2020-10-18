@@ -1,0 +1,51 @@
+.feature-card {
+
+    
+    border: 2px solid black;
+    flex: 0 0 35rem;
+    padding: 3rem;
+    margin-top: .5rem;
+    align-self: stretch;
+
+    &__image {
+        height: 13rem;
+        
+        overflow: hidden;
+        padding: 1rem;
+        text-align: center;
+        & > img {
+            height: 100%;
+        }
+    }
+
+    &__heading {
+        text-align: center;
+    }
+
+    &__description {
+        text-align: justify;
+        font-size: 1.5rem;
+        padding: 1.5rem 0;
+    }
+
+    
+
+    @media only screen and (max-width: 900px) {
+        flex: 0 0 50%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        flex: 0 0 100%;
+    }
+
+    &:not(:last-child) {
+        margin-right: .5rem;
+    }
+}
+
+// independent entities
+.heading__tertiary {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
