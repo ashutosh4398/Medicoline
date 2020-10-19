@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navigation from '../../components/Navbar/Navigation';
 import user_default from '../../assets/user.svg';
-import {Link} from 'react-router-dom';
+import {Link, Route, Switch} from 'react-router-dom';
 
 import './PatientProfile.scss';
+import Chat from '../../components/Chat/Chat';
+import Notification from '../../components/Notification/Notification';
 
 const PatientProfile = () => {
+
+    const [isOpen, setIsOpen] = useState(false);
+    const toggle = () => setIsOpen(!isOpen);
+
     return (
-        <div>
+        <div className="user-section">
             <Navigation 
             nav_items={[
                 {
@@ -50,12 +56,15 @@ const PatientProfile = () => {
 
             {/* main section */}
             <div className="user-profile">
-                <div className="row">
-                    <div className="col-md-3 border">
-                        <div className="side-nav">
+                <div className="user-profile__grid">
+                    <div className="user-profile__column user-profile__column--sidenav">
+                        <div className="">
                             <ul className="side-nav">
                                 <li className="side-nav__item">
-                                    <Link to="/patient/profile/">Write a review</Link>
+                                    <Link to="/patient/profile/">Write a POST</Link>
+                                </li>
+                                <li className="side-nav__item">
+                                    <Link to="/patient/profile/notification/">Notifications</Link>
                                 </li>
                                 <li className="side-nav__item">
                                     <Link to="/patient/profile/">Posts</Link>
@@ -65,6 +74,9 @@ const PatientProfile = () => {
                                 </li>
                                 <li className="side-nav__item">
                                     <Link to="/patient/profile/">Groups</Link>
+                                </li>
+                                <li className="side-nav__item">
+                                    <Link to="/patient/profile/chat/">Chat</Link>
                                 </li>
                                 <li className="side-nav__item">
                                     <Link to="/patient/profile/">Services</Link>
@@ -78,8 +90,30 @@ const PatientProfile = () => {
                             </ul>
                         </div>
                     </div>
-                    <div className="col-md-9 border">
-                        <h3>Hello world</h3>
+                    <div className="user-profile__column user-profile__column--main">
+                        <div className='menu-label' onClick={toggle}>Menu</div>
+                        <div className={`bg-menu ${isOpen ? 'menu-open' : '' }`}></div>
+                        <div className={`open-menu-items ${isOpen? 'open-menu-items--active' : 'open-menu-items--inactive'}`}>
+                            <ul>
+                                <li onClick={toggle}>Write a post</li>
+                                <li onClick={toggle}>Notifications</li>
+                                <li onClick={toggle}>Posts</li>
+                                <li onClick={toggle}>Comments</li>
+                                <li onClick={toggle}>Groups</li>
+                                <li onClick={toggle}>Services</li>
+                                <li onClick={toggle}>Settings</li>
+                                <li onClick={toggle}>Logout</li>
+                            </ul>
+                        </div>
+                        <main className="profile-main-content-container">
+                            <div className="profile-main-content">
+                                <Switch>
+                                    <Route exact path="/patient/profile/notification/" component={Notification}></Route>
+                                    <Route exact path="/patient/profile/chat/" component={Chat}></Route>
+                                </Switch>
+                            </div>
+                        </main>
+                                        
                     </div>
                 </div>
             </div>

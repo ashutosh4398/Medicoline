@@ -47,7 +47,7 @@
 }
 
 .main-content {
-    background-color: #fff;
+    background-color: $color-white;
 }
 
 .happy-to-help {
@@ -57,7 +57,7 @@
         padding: 2rem 2rem 4rem 2rem;
         justify-content: center;
         align-items: center;
-        background-color: #a2d9ff;
+        background-color: $color-homepage-curve-bg;
 
         &__left {
             @media only screen and (max-width: 600px) {
@@ -68,7 +68,7 @@
         &__right {
             padding: 2rem 1rem 3rem 1rem;
             text-align: center;
-            background-color: #fff;
+            background-color: $color-white;
             border-radius: 1rem;
             box-shadow: 0 1.4rem 3rem rgba($color-black,.6);
             flex: 0 0 60%;

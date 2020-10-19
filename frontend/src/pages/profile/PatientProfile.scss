@@ -1,3 +1,5 @@
+@import '../../sass/variables';
+
 .patient-information {
 
     display: flex;
@@ -6,12 +8,12 @@
     
 
     &__image {
-        height: 10rem;
-        width: 10rem;
+        height: 15rem;
+        width: 15rem;
         align-self: center;
-        border: 1rem solid black;
+        border: 1rem solid $color-gradient-blue-light;
         border-radius: 1rem;
-        box-shadow: 0 1.5rem 2rem rgba(0,0,0,.6);
+        box-shadow: 0 1.5rem 2rem rgba($color-black,.6);
 
         img {            
             height: 100%;
@@ -28,6 +30,7 @@
     &__activity {
         
         margin-left: auto;
+        align-self: center;
         &--actual-activity {
             //..   
         }
@@ -57,27 +60,161 @@
 
 // main activity section
 .user-profile {
-    padding: 0 5rem;
+    padding: 5rem 10rem;
+
+    
+
+    &__grid {
+        display: flex;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 2rem 4rem rgba($color-black,.7);
+    }
+
+    &__column {
+
+        &--sidenav {
+            flex: 0 0 30%;
+            background-color: #333945;
+        }   
+        
+        &--main {
+            flex: 1;
+            background-color: $color-white;
+            overflow: hidden;
+            position: relative;
+            
+        }
+    }
 }
 
 .side-nav {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
+    justify-content: center;
     list-style: none;
-    position: sticky;
+    padding-top: 2rem;
 
     &__item {
-        display: inline-block;
+        display: block;
+        text-align: center;
         font-size: 1.5rem;
-        &:not(:last-child) {
-            padding: 1rem 0;
+        text-transform: uppercase;
+        z-index:5;
+        
+        
+        position: relative;
+        padding: 2rem 0;
+
+        letter-spacing: 2px;
+        cursor: pointer;
+
+        &--active {
+            background-color: orangered;
         }
 
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            transform: scale(0);
+            width: 5px;
+            background-color: orangered;
+            z-index: -10;
+            
+            // first scale and then after duration of .2s grow the width;
+            transition: transform .2s, width .5s .2s;
+        }
+
+        &:hover::after {
+            transform: scale(1);
+            width: 100%;
+            color: orangered;
+        }
+
+        a {
+            color: $color-white;;
+            font-weight: 600;
+            display: width;
+            height: 100%;
+            width: 100%;
+        }
         a:hover {
             text-decoration: none;
         }
     }
     
     
+}
+
+.user-section {
+    background-image: linear-gradient(to right bottom, $color-user-profile-gradient-1,$color-user-profile-gradient-2);
+    // background-image: linear-gradient(to right bottom, #EAF0F1,#99AAAB);
+}
+
+.bg-menu {
+    height: 4rem;
+    width: 4rem;
+    background-color: $color-homepage-curve-bg;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    transition: all .5s;
+}
+
+.menu-label {
+    position: absolute;
+    height: 6rem;
+    width: 6rem;
+    background-color: greenyellow;
+    border-radius: 50%;
+    top: .5rem;
+    right: .5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 1.5rem 4rem rgba($color-black, .6);
+    
+    
+    z-index: 100;
+}
+
+.menu-open {
+    transition: all .5s;
+    transform: scale(80);
+
+}
+
+.open-menu-items {
+    position: absolute;
+    font-size: 1rem;
+    z-index: 10000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    transition: all .2s .2s;
+
+    &--active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    &--inactive {
+        visibility: hidden;
+        opacity: 0;
+    }
+}
+
+.profile-main-content-container {
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.profile-main-content {
+    height: 200vh;
 }

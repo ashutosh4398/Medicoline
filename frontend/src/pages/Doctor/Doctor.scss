@@ -13,13 +13,13 @@
         box-shadow: 0 1.5rem 3rem rgba($color-black, 1);
 
         width: 80%;
-        background-image: linear-gradient(to right, #fff 70%, #10A881 70%);
+        background-image: linear-gradient(to right, $color-white 70%, $color-doctor-signup-gradient 70%);
 
         display: flex;
         justify-content: center;
 
         @media only screen and (max-width: 700px) {
-            background-image: linear-gradient(to right, #fff 100%, #fff 100%);
+            background-image: linear-gradient(to right, $color-white 100%, $color-white 100%);
         }
     }
 

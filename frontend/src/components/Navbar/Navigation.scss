@@ -33,6 +33,10 @@
         text-decoration: none;
         color: $color-black;
         font-size: 2.5rem;
+
+        @media only screen and (max-width: 900px) {
+            font-size: 2rem;
+        }
         margin: 0 3.5rem ;
         position: relative;
         text-align: right;
@@ -55,7 +59,7 @@
         }
     
         &:hover {
-            color: #D63031;
+            color: $color-navigation-hover;
         }
     
         &:hover::after {
