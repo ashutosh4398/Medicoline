@@ -1,0 +1,72 @@
+@import '../../sass/variables';
+
+.doctor-entry {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    
+    &__block {
+        margin: 2rem 0;
+        border-radius: 1rem;
+        box-shadow: 0 1.5rem 3rem rgba($color-black, 1);
+
+        width: 80%;
+        background-image: linear-gradient(to right, #fff 70%, #10A881 70%);
+
+        display: flex;
+        justify-content: center;
+
+        @media only screen and (max-width: 700px) {
+            background-image: linear-gradient(to right, #fff 100%, #fff 100%);
+        }
+    }
+
+    &__form-container {
+    
+        // occupy 70% of the flex box 
+        flex: 0 0 70%;
+        padding: 2rem;
+        align-self: center;
+        @media only screen and (max-width: 700px) {
+            flex: 0 0 100%;
+        }
+    }
+
+    &__login-container {
+        flex: 0 0 50%;
+        padding: 2rem;
+        align-self: center;
+        @media only screen and (max-width: 700px) {
+            flex: 0 0 100%;
+        }
+    }
+
+    &__illustration-container {
+        
+        // occupy the remaining space flex-grow
+        flex: 1;
+        text-align: center;
+        align-self: center;
+        display: flex;
+        flex-direction: column;
+
+        @media only screen and (max-width: 700px) {
+            display: none;
+            flex: 0;
+        }
+    }
+
+    input {
+        font-size: 1.5rem;
+        padding: 2rem;
+    }
+
+    select,textarea {
+        font-size: 1.5rem;
+        resize: none;
+    }
+
+}
+

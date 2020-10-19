@@ -59,9 +59,9 @@
         }
     
         &:hover::after {
-            width: 70%;
-            
+            width: 70%; 
         }
+        
     }
 }
 
@@ -71,7 +71,7 @@
     transition: all .5s;
     border-bottom: 1px solid $color-grey-dark;
     padding: 0 3rem;
-    position: sticky;
+    position: fixed; // TODO: Need to change it back to sticky with some styling
 }
 
 

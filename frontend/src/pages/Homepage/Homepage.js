@@ -11,7 +11,6 @@ import thanks_image from '../../assets/thank-you.png';
 import './Homepage.scss';
 
 const Homepage = () => {
-    console.log("homepae")
     return (
         <div>
             <Header />
@@ -45,8 +44,9 @@ const Homepage = () => {
                     </div>
                     <div className="middle-main">
                         
-                        <div className="middle-main__left">
-                            <img src={thanks_image} alt="Thanks" className="img-fluid"/>
+                        <div className="middle-main__left text-center">
+                                <img src={thanks_image}  alt="Thanks" className="img-fluid"/>
+                                <a href="https://www.freepik.com/vectors/people">People vector created by stories - www.freepik.com</a>
                         </div>
                         <div className="middle-main__right">
                             <h1 className="heading__primary text-center">Thank you</h1> 

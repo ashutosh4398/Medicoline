@@ -22,7 +22,20 @@ import './Navigation.scss';
     //     ..
     // ]
 // }
-const Navigation = ({nav_items,classname=''}) => {
+const Navigation = ({nav_items=[
+    {
+        nav_item : 'Patient',
+        nav_link : '/patient/login/'
+    },
+    {
+        nav_item : 'Doctor',
+        nav_link : '/doctor/login/'
+    },
+    {
+        nav_item : 'Business',
+        nav_link : '/patient/business/'
+    }
+],classname=''}) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
     console.log(nav_items, classname);
@@ -48,7 +61,7 @@ const Navigation = ({nav_items,classname=''}) => {
     }
 
     return (
-        <Navbar expand="md" className={classname}>
+        <Navbar expand="md" className={classname} style={{position: classname==='active'? 'sticky': ''}}>
             <NavbarBrand>
                 <Link to="/">
                     <img src={logo} alt="Logo" className="logo"/>
