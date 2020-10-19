@@ -1,0 +1,83 @@
+.patient-information {
+
+    display: flex;
+    flex-wrap: wrap;
+
+    
+
+    &__image {
+        height: 10rem;
+        width: 10rem;
+        align-self: center;
+        border: 1rem solid black;
+        border-radius: 1rem;
+        box-shadow: 0 1.5rem 2rem rgba(0,0,0,.6);
+
+        img {            
+            height: 100%;
+            width: 100%;
+        }
+
+        @media only screen and (max-width: 400px) {
+            flex: 0 0 100%;   
+        }
+        
+
+    }
+
+    &__activity {
+        
+        margin-left: auto;
+        &--actual-activity {
+            //..   
+        }
+
+        &--group-selection {
+            padding: 2rem 0;
+            font-size: 2rem;
+        }
+    }
+
+    .custom-grid {
+        display: flex;
+        justify-content: flex-end;
+        &__column {
+            
+            &:not(:last-child) {
+                margin-right:5rem;
+            }
+            
+        }
+    }
+
+    select {
+        font-size: 1.3rem;
+    }
+}
+
+// main activity section
+.user-profile {
+    padding: 0 5rem;
+}
+
+.side-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    list-style: none;
+    position: sticky;
+
+    &__item {
+        display: inline-block;
+        font-size: 1.5rem;
+        &:not(:last-child) {
+            padding: 1rem 0;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+    }
+    
+    
+}

@@ -58,6 +58,11 @@ const DoctorSignup = () => {
                             </div>
 
                             <div className="form-group">
+                                <label htmlFor="docs">Please upload necessary documents</label>
+                                <input type="file" className="" id="docs"/>
+                            </div>
+
+                            <div className="form-group">
                                 <textarea cols="30" rows="5" className="form-control" placeholder="Please enter your clinic's or hospital's address"></textarea>
                             </div>
 
