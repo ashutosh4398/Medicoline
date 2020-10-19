@@ -1,11 +1,11 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
-import Homepage from './pages/Homepage/Homepage';
+import { Router } from './Router';
 
 function App() {
 	return (
-		<Homepage />
+		<Router />
 	)
 }
 

@@ -1,55 +1,26 @@
-import React, {useState} from 'react';
-import {
-    Collapse,
-    Navbar,
-    NavbarToggler,
-    Nav,
-    NavItem,
-    NavbarBrand,
-    NavLink
-} from 'reactstrap';
-import {Link} from 'react-router-dom';
-import logo from '../../assets/logo.png';
+import React from 'react';
 import illustration from '../../assets/illustration.png';
+import Navigation from '../Navbar/Navigation';
 import './Header.scss';
 
 const Header = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const toggle = () => setIsOpen(!isOpen);
-
-    window.onscroll = () => {
-        const top = window.scrollY;
-        const header = document.querySelector('.navbar')
-        if (top >= 5) {
-            header.classList.add('active');
-        } else {
-            header.classList.remove('active');
-        }
-    }
-
     return ( 
-        <div className="header">
-            {/* Navigation */}
-            <Navbar expand="md">
-                <NavbarBrand>
-                    <img src={logo} alt="Logo" className="logo"/>
-                    {/* Medicoline */}
-                </NavbarBrand>
-                <NavbarToggler className="toggler" onClick={toggle}></NavbarToggler>
-                <Collapse isOpen={isOpen} navbar>
-                    <Nav className="ml-auto" navbar>
-                        <NavItem>
-                            <NavLink className="nav__link" to="/">Patient</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink className="nav__link" to="/">Doctor</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink className="nav__link" to="/">Business</NavLink>
-                        </NavItem>
-                    </Nav>
-                </Collapse>
-            </Navbar>
+        <div className="header" id="header">
+            {/* navbar space */}
+            <Navigation nav_items={[
+                {
+                    nav_item : 'Patient',
+                    nav_link : '/patient/login/'
+                },
+                {
+                    nav_item : 'Doctor',
+                    nav_link : '/doctor/login/'
+                },
+                {
+                    nav_item : 'Business',
+                    nav_link : '/patient/business/'
+                }
+            ]} />
             <div className="header__sub">
                 <div className="header__sub--left">
                     <div className="feature-box">

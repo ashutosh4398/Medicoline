@@ -1,0 +1,77 @@
+@import '../../sass/variables';
+
+.navbar{
+    padding: 0 3rem;
+    position: sticky;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: transparent;
+    transition: all .5s;
+    @media only screen and (max-width: 900px) {
+        background-color: $color-navbar-light;
+    }
+
+    @media only screen and (max-width: 400px) {
+        position: relative;
+    }
+    
+    // logo
+    .navbar-brand {
+        height: 6.5rem;
+        width: auto;
+    
+        .logo {
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    .nav__link {
+        cursor: pointer;
+        text-decoration: none;
+        color: $color-black;
+        font-size: 2.5rem;
+        margin: 0 3.5rem ;
+        position: relative;
+        text-align: right;
+        transition: color .2s;
+        &::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: $color-black;
+            transition: width .2s;
+            transform-origin: center;
+            text-decoration: none;
+            @media only screen and (max-width: 900px) {
+                display: none;
+            }
+        }
+    
+        &:hover {
+            color: #D63031;
+        }
+    
+        &:hover::after {
+            width: 70%;
+            
+        }
+    }
+}
+
+// apply this style for navbar whenever the page scolls down
+.active {
+    background-color: $color-navbar-light;
+    transition: all .5s;
+    border-bottom: 1px solid $color-grey-dark;
+    padding: 0 3rem;
+    position: sticky;
+}
+
+

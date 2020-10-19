@@ -18,4 +18,6 @@ body {
     // setting the overall font-family
     font-family: 'Open Sans', sans-serif;
     line-height: 1.7;
+    display: flex;
+    flex-direction: column;
 }
