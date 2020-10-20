@@ -1,5 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import DiseaseDetailPage from './pages/DiseaseDetails/DiseaseDetailPage';
+import Diseases from './pages/Diseases/Diseases';
 import DoctorLogin from './pages/Doctor/DoctorLogin';
 import DoctorSignup from './pages/Doctor/DoctorSignup';
 import Homepage from './pages/Homepage/Homepage';
@@ -12,6 +14,9 @@ export const Router = () => {
         <BrowserRouter>
             <Switch>
                 <Route exact path="/" component={Homepage}/>
+                <Route exact path="/diseases/" component={Diseases} />
+                <Route path="/diseases/:slug/" component={DiseaseDetailPage} />
+
                 <Route path="/patient/login/" component={PatientLogin}/>
                 <Route path="/patient/signup/" component={PatientSignup}/>
                 <Route path="/patient/profile/" component={PatientProfile}/>

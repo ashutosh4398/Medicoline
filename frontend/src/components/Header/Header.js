@@ -1,6 +1,7 @@
 import React from 'react';
 import illustration from '../../assets/illustration.png';
 import Navigation from '../Navbar/Navigation';
+import {Link} from 'react-router-dom'
 import './Header.scss';
 
 const Header = () => {
@@ -30,7 +31,7 @@ const Header = () => {
                             We at Medicoline ensure that all questions of each patients will be answered by the respective doctor and also create an environment where every patient can share their experiences with others which will constantly motivate and help to recover faster
                         </p>
                         <div className="feature-box__button-group">
-                            <a href="#" className="cust_btn">Checkout Groups</a>
+                            <Link to="/diseases/" className="cust_btn">Checkout Groups</Link>
                             <a href="#" className="cust_btn">Disease prediction</a>
                         </div>
                     </div>

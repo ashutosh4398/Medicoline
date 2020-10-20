@@ -47,7 +47,6 @@ const Navigation = ({nav_items=[
     window.onscroll = () => {
         const top = window.scrollY;
         const header = document.querySelector('.navbar')
-        console.log(classname);
         if (top >= 5) {
             header.classList.add('active');
         } else if (classname==='active') {
