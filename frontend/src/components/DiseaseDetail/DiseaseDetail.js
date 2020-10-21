@@ -3,6 +3,7 @@ import Axios from 'axios';
 import { BASEURL } from '../../shared/BASEURL';
 import Loader from '../Loader/Loader';
 import './DiseaseDetail.scss';
+import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
 
 // pass the slug for particulat in props 
 const DiseaseDetail = ({slug}) => {
@@ -10,16 +11,18 @@ const DiseaseDetail = ({slug}) => {
     const [details, setDetails] = useState()
     const [isloaded, setIsLoaded] = useState(false)
 
+    
+
     // component did mount
     useEffect(() => {
-        Axios.get(`${BASEURL}/api/disease/${slug}`)
+        Axios.get(`${BASEURL}/api/disease/${slug}/`)
         .then(resp => {
             setDetails(resp.data?.description)
             setIsLoaded(true);
         })
         .catch(err => {
             console.log(err.response);
-            // alert(err.response);
+            setIsLoaded(true);
         })
     },[]);
 
@@ -27,9 +30,15 @@ const DiseaseDetail = ({slug}) => {
         <div>
         {
             isloaded? (
-                <span>
-                    <div className="" dangerouslySetInnerHTML={{__html: details}}></div>
-                </span>
+                details? (
+                    <span>
+                        <div className="" dangerouslySetInnerHTML={{__html: details}}></div>
+                    </span>
+                ) : (
+                    <span>
+                        NOT FOUND
+                    </span>
+                )            
             ): (
                 <Loader />
             )

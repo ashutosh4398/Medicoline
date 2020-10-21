@@ -1,0 +1,23 @@
+@import '../../sass/variables';
+.settings {
+    font-size: 1.8rem;
+
+    form {
+        margin: 2rem 0;
+        input {
+            font-size: inherit;
+        }
+
+        fieldset {
+            border: 1px solid black;
+            border-radius: 1rem;
+        }
+
+        legend {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 1rem;
+        }
+    }
+}

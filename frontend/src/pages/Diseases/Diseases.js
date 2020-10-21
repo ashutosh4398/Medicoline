@@ -38,7 +38,7 @@ const Diseases = () => {
                     isLoaded? (
                             diseaseList.map(disease => (
                                     <div className="col-sm-12 col-md-6 my-3">
-                                        <DiseaseCard disease_name={disease.disease_name} slug={disease.slug} />
+                                        <DiseaseCard disease_name={disease.disease_name} slug={disease.slug} id={disease.id} />
                                     </div>
                                 ))
                     ) : (

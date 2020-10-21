@@ -1,12 +1,26 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 import { Router } from './Router';
 import { TOKEN_HANDLER } from './shared/TOKEN_HANDLER';
+import Axios from 'axios';
+import { BASEURL } from './shared/BASEURL';
 
+const initialState = {
+	groups: [],
+	posts: [],
+	settings : {
+		first_name: null,
+		last_name: null,
+		email: null,
+	},
+	notifications: [],
+	username: null
+}
 
 function App() {
-	const [username, setUsername] = React.useState();
+	
+	const [userDetails, setUserDetails] = React.useState(initialState)
 
 	const getToken = () => {
 		const token = localStorage.getItem('token')
@@ -22,9 +36,26 @@ function App() {
 	}
 
 	const deleteToken = () => {
-		setUsername('');
+		setUserDetails(initialState);
 		localStorage.clear();
 	}
+
+	useEffect(() => {
+		if (getToken()) {
+			Axios.get(`${BASEURL}/api/test/`,{
+				headers: {
+					Authorization: `Token ${getToken()}`
+				}
+			})
+			.then(resp => {
+				console.log(resp.data);
+				setUserDetails(resp.data)
+			})
+			.catch(err => {
+				console.log(err.response);
+			})
+		}
+	},[]);
 
 	return (
 		<TOKEN_HANDLER.Provider
@@ -33,11 +64,10 @@ function App() {
 				getToken,
 				deleteToken,
 				StoreToken,
-				username,
-				setUsername
+				userDetails,
+				setUserDetails
 			}
 		}
-		
 		>
 			<Router />
 		</TOKEN_HANDLER.Provider>

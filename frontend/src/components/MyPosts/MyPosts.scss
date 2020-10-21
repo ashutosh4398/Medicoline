@@ -1,0 +1,41 @@
+@import '../../sass/variables';
+
+.my-posts {
+    border: 2px solid black;
+    padding: 1rem;
+    font-size: 1.5rem;
+    border-radius: 1rem;
+
+    margin: 2rem 0;
+    cursor: pointer;
+    box-shadow: 0 1rem 3rem rgba($color-black,.25);
+
+    &__content {
+        
+        overflow: hidden;
+        // add ... at end
+        white-space: nowrap;
+        text-overflow: ellipsis; 
+        border-bottom: 1px solid $color-grey-dark-1;
+        padding-bottom: 1rem;
+    }
+
+    &__group {
+        padding: .5rem;
+        display: flex;
+        flex-wrap: wrap;
+        p {
+            flex: 0 0 50%;
+            @media only screen and (max-width: 650px) {
+                flex: 0 0 100%;
+            }
+        }
+        span {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+    }
+    
+    
+    
+}

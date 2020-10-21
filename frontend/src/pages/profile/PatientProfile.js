@@ -3,35 +3,48 @@ import Navigation from '../../components/Navbar/Navigation';
 import user_default from '../../assets/user.svg';
 import {Link, Route, Switch, useHistory} from 'react-router-dom';
 
-import './PatientProfile.scss';
+
 import Chat from '../../components/Chat/Chat';
 import Notification from '../../components/Notification/Notification';
 import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
 import Axios from 'axios';
 import { BASEURL } from '../../shared/BASEURL';
+import Posts from '../../components/Posts/Posts';
+// icons for navigation open and close
+import {GiHamburgerMenu} from 'react-icons/gi';
+import {FaTimes} from 'react-icons/fa';
 
-const PatientProfile = () => {
+
+import './PatientProfile.scss';
+import MyPosts from '../../components/MyPosts/MyPosts';
+import ProfileDisease from '../../components/ProfileDisease/ProfileDisease';
+import PatientSettings from '../../components/PatientSettings/PatientSettings';
+
+const PatientProfile = (props) => {
 
     const [isOpen, setIsOpen] = useState(false);
+    const [currentSelected, setCurrentSelected] = useState(null);
     const toggle = () => setIsOpen(!isOpen);
     const history = useHistory();
 
-    const {getToken,setUsername, username, deleteToken} = useContext(TOKEN_HANDLER);
+    const {getToken,deleteToken,userDetails, setUserDetails} = useContext(TOKEN_HANDLER);
 
     if (!getToken()) {
         history.push('/patient/login/');
     }
 
     useEffect(() => {
+        
 
-        if (!username && getToken()) {
+
+        if (!userDetails.username && getToken()) {
             Axios.get(`${BASEURL}/api/test/`,{
                 headers: {
                     Authorization: `Token ${getToken()}`
                 }
             })
             .then(resp => {
-                setUsername(resp.data?.username);
+                setUserDetails(resp.data);
             })
             .catch(err => {
                 console.log(err.response);
@@ -45,12 +58,12 @@ const PatientProfile = () => {
             <Navigation 
             nav_items={[
                 {
-                    nav_item: `${username}`,
+                    nav_item: userDetails?.username? `${userDetails.username}`: '',
                     nav_link: '/patient/profile/'
                 },
                 {
-                    nav_item: 'Group',
-                    nav_link: '/'
+                    nav_item: 'Groups',
+                    nav_link: '/diseases/'
                 }
             ]}
             classname="active"/>
@@ -74,8 +87,12 @@ const PatientProfile = () => {
                             <label htmlFor="group-select" className="font-weight-bold">Selected Group</label>
                             <select id="group-select" className="form-control">
                                 <option value="All" disabled selected>All</option>
-                                <option value="Heart" >Heart</option>
-                                <option value="Dental" >Dental</option>
+                                {
+                                    userDetails.groups.map(eachGroup => (
+                                        <option id={eachGroup.id} value={eachGroup.disease_name} >{eachGroup.disease_name}</option>
+                                    ))
+                                }
+                                
                             </select>
                         </div>
                     </div>
@@ -88,25 +105,25 @@ const PatientProfile = () => {
                     <div className="user-profile__column user-profile__column--sidenav">
                         <div className="">
                             <ul className="side-nav">
-                                <Link to="/patient/profile/">
-                                    <li className="side-nav__item">
+                                <Link to="/patient/profile/" onClick={() => setCurrentSelected('write')}>
+                                    <li className={`side-nav__item ${currentSelected === 'write'? 'side-nav__item--active' : ''}`}>
                                         Write a POST
                                     </li>
                                 </Link>
 
-                                <Link to="/patient/profile/notification/">
-                                    <li className="side-nav__item">
+                                <Link to="/patient/profile/notification/" onClick={() => setCurrentSelected('notifications')}>
+                                    <li className={`side-nav__item ${currentSelected === 'notifications'? 'side-nav__item--active' : ''}`}>
                                         Notifications
                                     </li>
                                 </Link>
 
-                                <Link to="/">
-                                    <li className="side-nav__item">
+                                <Link to="/patient/profile/my-posts/" onClick={() => setCurrentSelected('posts')}>
+                                    <li className={`side-nav__item ${currentSelected === 'posts'? 'side-nav__item--active' : ''}`}>
                                         Posts
                                     </li>
                                 </Link>
-                                <Link to="/">
-                                    <li className="side-nav__item">
+                                <Link to="/patient/profile/groups/" onClick={() => setCurrentSelected('groups')}>
+                                    <li className={`side-nav__item ${currentSelected === 'groups'? 'side-nav__item--active' : ''}`}>
                                         Groups
                                     </li>
                                 </Link>
@@ -123,7 +140,7 @@ const PatientProfile = () => {
                                     </li>
                                 </Link>
 
-                                <Link to="/">
+                                <Link to="/patient/profile/settings/">
                                     <li className="side-nav__item">
                                         Settings
                                     </li>
@@ -136,7 +153,17 @@ const PatientProfile = () => {
                         </div>
                     </div>
                     <div className="user-profile__column user-profile__column--main">
-                        <div className='menu-label' onClick={toggle}>Menu</div>
+                        <div className='menu-label' onClick={toggle}>
+                            {
+                                isOpen? (
+                                    <FaTimes className="icon" />
+                                ) : (
+                                    <GiHamburgerMenu className="icon" />
+                                )
+                            }
+                            
+                            
+                        </div>
                         <div className={`bg-menu ${isOpen ? 'menu-open' : '' }`}></div>
                         <div className={`open-menu-items ${isOpen? 'open-menu-items--active' : 'open-menu-items--inactive'}`}>
                             <ul>
@@ -152,10 +179,17 @@ const PatientProfile = () => {
                         </div>
                         <main className="profile-main-content-container">
                             <div className="profile-main-content">
-                                <Switch>
-                                    <Route exact path="/patient/profile/notification/" component={Notification}></Route>
-                                    <Route exact path="/patient/profile/chat/" component={Chat}></Route>
-                                </Switch>
+                                <div className="profile-main-content__inner">
+                                    <Switch>
+                                        <Route exact path="/patient/profile/" component={Posts}/>
+                                        <Route path="/patient/profile/notification/" component={Notification}></Route>
+                                        <Route path="/patient/profile/my-posts/" component={MyPosts}></Route>
+                                        <Route path="/patient/profile/groups/" component={ProfileDisease}/>
+                                        <Route path="/patient/profile/chat/" component={Chat}></Route>
+                                        <Route path="/patient/profile/settings/" component={PatientSettings}/>
+                                    </Switch>    
+                                </div>
+                                
                             </div>
                         </main>
                                         

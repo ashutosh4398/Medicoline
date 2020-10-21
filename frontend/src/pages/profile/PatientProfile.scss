@@ -4,7 +4,7 @@
 
     display: flex;
     flex-wrap: wrap;
-
+    justify-content: center;
     
 
     &__image {
@@ -20,7 +20,7 @@
             width: 100%;
         }
 
-        @media only screen and (max-width: 400px) {
+        @media only screen and (max-width: 500px) {
             flex: 0 0 100%;   
         }
         
@@ -31,8 +31,9 @@
         
         margin-left: auto;
         align-self: center;
-        &--actual-activity {
-            //..   
+        
+        @media only screen and (max-width: 500px) {
+            margin-top: 3rem;
         }
 
         &--group-selection {
@@ -49,7 +50,6 @@
             &:not(:last-child) {
                 margin-right:5rem;
             }
-            
         }
     }
 
@@ -61,6 +61,14 @@
 // main activity section
 .user-profile {
     padding: 5rem 10rem;
+
+    @media only screen and (max-width: 700px) {
+        padding: 5rem 5rem;
+    }
+
+    @media only screen and (max-width: 500px) {
+        padding: 5rem 2rem;
+    }
 
     
 
@@ -76,6 +84,10 @@
         &--sidenav {
             flex: 0 0 30%;
             background-color: #333945;
+
+            @media only screen and (max-width: 1000px) {
+                display: none;
+            }
         }   
         
         &--main {
@@ -177,6 +189,12 @@
     right: 1rem;
     top: 1rem;
     transition: all .5s;
+    z-index: 80;
+
+    display: none;
+    @media only screen and (max-width: 1000px) {
+        display: block;
+    }
 }
 
 .menu-label {
@@ -191,9 +209,22 @@
     justify-content: center;
     align-items: center;
     box-shadow: 0 1.5rem 4rem rgba($color-black, .6);
-    
-    
+    cursor: pointer;
+    display: none;
+    @media only screen and (max-width: 1000px) {
+        display: block;
+    }
     z-index: 100;
+    
+
+    .icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        font-size: 2.5rem;
+        
+    }
 }
 
 .menu-open {
@@ -228,5 +259,10 @@
 }
 
 .profile-main-content {
-    height: 200vh;
+    
+
+    &__inner {
+        padding: 3rem;
+        
+    }
 }
