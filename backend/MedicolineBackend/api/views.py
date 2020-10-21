@@ -1,3 +1,118 @@
 from django.shortcuts import render
+# imported models
+import api.models as models
+# token authentication
+from rest_framework.authtoken.models import Token
+
+from rest_framework.permissions import AllowAny
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+import api.serializers as api_ser
+
+from django.contrib.auth import authenticate
+
+from api.utils import get_model_object 
 
 # Create your views here.
+class PatientSignupView(APIView):
+    """ Creates account for patient """
+
+    serializer_class = api_ser.PatientSignupSerializer
+    permission_classes = [AllowAny]
+
+    def post(self,request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            # now first create a custom user object
+            user = models.CustomUser.objects.create_user(
+                username = serializer.validated_data.get('email'),
+                first_name = serializer.validated_data.get('first_name'),
+                last_name = serializer.validated_data.get('last_name'),
+                email = serializer.validated_data.get('email'),
+                password = serializer.validated_data.get('password')
+            )
+
+            # create a patient instance
+            patient = models.Patient.objects.create(user = user)
+
+            # create a token
+            token = Token.objects.create(user=user)
+
+            return Response(data={'success': 'patient created successfully'}, status=status.HTTP_201_CREATED)
+
+
+        return Response(serializer.errors)
+
+
+class LoginView(APIView):
+    """ Logs in all the entities """
+
+    serializer_class = api_ser.LoginSerializer
+    permission_classes = [AllowAny]
+
+    def post(self,request):
+        serializer = self.serializer_class(data = request.data)
+        if serializer.is_valid():
+            user = authenticate(email=serializer.validated_data.get('email'),
+                                password = serializer.validated_data.get('password')
+                            )
+            status = serializer.validated_data.get('status')
+            if user:
+                # grab token
+                token,_ = Token.objects.get_or_create(user=user)
+                if status == 'patient':
+                    instance = get_model_object(models.Patient,{'user': user})
+                    if instance:
+                        return Response({
+                            'token': token.key
+                        })
+                elif status == 'doctor':
+                    instance = get_model_object(models.Doctor,{'user': user})
+                    if instance:
+                        return Response({
+                            'token': token.key
+                        })
+                elif status == 'admin':
+                    if user.is_superuser:
+                        return Response({
+                            'token': token.key
+                        })
+                elif status == 'business':
+                    # TODO: Need to add business login once completed
+                    pass
+                
+                
+            return Response({'error': 'Account not found'},status=400)
+        return Response(serializer.errors)
+
+class ShowAllDiseasesView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = api_ser.ShowAllGroupsSerializer
+
+    def get(self,request):
+        # sort the queryset in alphabetical order of disease name
+        queryset = models.Groups.objects.all().order_by('disease_name')
+        serializer = self.serializer_class(instance=queryset,many=True)
+        return Response(serializer.data)
+
+class GroupDescriptionView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = api_ser.GroupDescriptionSerializer
+
+    def get(self,request,slug):
+        # get the requested dieases
+        disease = get_model_object(models.Groups,{'slug': slug})
+        if disease:
+            serializer = self.serializer_class(instance=disease)
+            return Response(serializer.data)
+        return Response({'error': 'Not fount'},status=status.HTTP_400_BAD_REQUEST)
+
+class UserDetailsView(APIView):
+    def get(self,request):
+        print(request.user)
+        return Response({
+            'username': f"{request.user.first_name} {request.user.last_name}"
+        })
