@@ -1,23 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Navigation from '../../components/Navbar/Navigation';
 import user_default from '../../assets/user.svg';
-import {Link, Route, Switch} from 'react-router-dom';
+import {Link, Route, Switch, useHistory} from 'react-router-dom';
 
 import './PatientProfile.scss';
 import Chat from '../../components/Chat/Chat';
 import Notification from '../../components/Notification/Notification';
+import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
+import Axios from 'axios';
+import { BASEURL } from '../../shared/BASEURL';
 
 const PatientProfile = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
+    const history = useHistory();
+
+    const {getToken,setUsername, username, deleteToken} = useContext(TOKEN_HANDLER);
+
+    if (!getToken()) {
+        history.push('/patient/login/');
+    }
+
+    useEffect(() => {
+
+        if (!username && getToken()) {
+            Axios.get(`${BASEURL}/api/test/`,{
+                headers: {
+                    Authorization: `Token ${getToken()}`
+                }
+            })
+            .then(resp => {
+                setUsername(resp.data?.username);
+            })
+            .catch(err => {
+                console.log(err.response);
+            })
+        }
+        
+    },[]);
 
     return (
         <div className="user-section">
             <Navigation 
             nav_items={[
                 {
-                    nav_item: 'Ashutosh Dhondkar',
+                    nav_item: `${username}`,
                     nav_link: '/patient/profile/'
                 },
                 {
@@ -60,32 +88,49 @@ const PatientProfile = () => {
                     <div className="user-profile__column user-profile__column--sidenav">
                         <div className="">
                             <ul className="side-nav">
-                                <li className="side-nav__item">
-                                    <Link to="/patient/profile/">Write a POST</Link>
-                                </li>
-                                <li className="side-nav__item">
-                                    <Link to="/patient/profile/notification/">Notifications</Link>
-                                </li>
-                                <li className="side-nav__item">
-                                    <Link to="/patient/profile/">Posts</Link>
-                                </li>
-                                <li className="side-nav__item">
-                                    <Link to="/patient/profile/">Comments</Link>
-                                </li>
-                                <li className="side-nav__item">
-                                    <Link to="/patient/profile/">Groups</Link>
-                                </li>
-                                <li className="side-nav__item">
-                                    <Link to="/patient/profile/chat/">Chat</Link>
-                                </li>
-                                <li className="side-nav__item">
-                                    <Link to="/patient/profile/">Services</Link>
-                                </li>
-                                <li className="side-nav__item">
-                                    <Link to="/patient/profile/">Settings</Link>
-                                </li>
-                                <li className="side-nav__item">
-                                    <Link to="/patient/login/">Logout</Link>
+                                <Link to="/patient/profile/">
+                                    <li className="side-nav__item">
+                                        Write a POST
+                                    </li>
+                                </Link>
+
+                                <Link to="/patient/profile/notification/">
+                                    <li className="side-nav__item">
+                                        Notifications
+                                    </li>
+                                </Link>
+
+                                <Link to="/">
+                                    <li className="side-nav__item">
+                                        Posts
+                                    </li>
+                                </Link>
+                                <Link to="/">
+                                    <li className="side-nav__item">
+                                        Groups
+                                    </li>
+                                </Link>
+
+                                <Link>
+                                    <li className="side-nav__item">
+                                       Chat
+                                    </li>
+                                </Link>
+
+                                <Link to="/">
+                                    <li className="side-nav__item">
+                                        Services
+                                    </li>
+                                </Link>
+
+                                <Link to="/">
+                                    <li className="side-nav__item">
+                                        Settings
+                                    </li>
+                                </Link>
+
+                                <li className="side-nav__item" onClick={deleteToken}>
+                                    Logout
                                 </li>
                             </ul>
                         </div>

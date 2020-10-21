@@ -38,11 +38,6 @@ const Navigation = ({nav_items=[
 ],classname=''}) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
-    console.log(nav_items, classname);
-
-    useEffect(() => {
-        console.log("Component mounted")
-    }, []);
 
     window.onscroll = () => {
         const top = window.scrollY;

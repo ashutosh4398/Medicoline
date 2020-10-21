@@ -96,6 +96,11 @@
     list-style: none;
     padding-top: 2rem;
 
+    a:hover {
+        text-decoration: none;
+        
+    }
+
     &__item {
         display: block;
         text-align: center;
@@ -103,12 +108,19 @@
         text-transform: uppercase;
         z-index:5;
         
+        color: $color-white;;
+        font-weight: 600;
         
+        height: 100%;
+        width: 100%;
         position: relative;
         padding: 2rem 0;
+        
 
         letter-spacing: 2px;
         cursor: pointer;
+
+        
 
         &--active {
             background-color: orangered;
@@ -135,7 +147,7 @@
             color: orangered;
         }
 
-        a {
+        a{
             color: $color-white;;
             font-weight: 600;
             display: width;
