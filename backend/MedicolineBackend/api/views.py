@@ -89,6 +89,7 @@ class LoginView(APIView):
         return Response(serializer.errors)
 
 class ShowAllDiseasesView(APIView):
+    """ Returns list of diseases """
     permission_classes = [AllowAny]
     serializer_class = api_ser.ShowAllGroupsSerializer
 
@@ -99,6 +100,8 @@ class ShowAllDiseasesView(APIView):
         return Response(serializer.data)
 
 class GroupDescriptionView(APIView):
+    """ Returns description of the specified disease """
+
     permission_classes = [AllowAny]
     serializer_class = api_ser.GroupDescriptionSerializer
 
@@ -111,8 +114,50 @@ class GroupDescriptionView(APIView):
         return Response({'error': 'Not fount'},status=status.HTTP_400_BAD_REQUEST)
 
 class UserDetailsView(APIView):
+    """ Returns details of the logged in patient """
     def get(self,request):
-        print(request.user)
+        # preparing queryset
+        patient = get_model_object(models.Patient,{'user': request.user})
+        serialized = api_ser.ShowAllGroupsSerializer(patient.groups.all(),many=True)
         return Response({
-            'username': f"{request.user.first_name} {request.user.last_name}"
+            'username': f"{request.user.first_name} {request.user.last_name}",
+            'groups': serialized.data
         })
+
+class JoinGroupView(APIView):
+    """ Allows the user to join a particular group """
+    serializer_class = api_ser.JoinGroupSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            # now we need to get the disease/group object
+            group = get_model_object(models.Groups, 
+                        {'slug': serializer.validated_data.get('slug')})
+            if group:
+                # get patient instance
+                patient = get_model_object(models.Patient,{'user': request.user})
+                if patient:
+                    # add the patient to that particular group
+                    patient.groups.add(group)
+                    return Response(data={'success': {
+                        'id': group.id,
+                        'disease_name': group.disease_name,
+                        'slug': group.slug
+                    }})
+                return Response(data={'error': 'Patient not found'},status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={'error': 'Not found'},status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors)
+
+
+class PostQuestionOrExperienceView(APIView):
+
+    serializer_class = api_ser.PostQuestionOrExperienceSerializer
+    def post(self,request):
+        serializer = self.serializer_class(data=request.data,context={
+            'user': request.user
+        })
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.errors)
+

@@ -34,12 +34,60 @@ class LoginSerializer(serializers.Serializer):
     # status = ['patient','doctor','admin']
 
 class ShowAllGroupsSerializer(serializers.ModelSerializer):
+    members = serializers.SerializerMethodField()
+    posts = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
     class Meta:
         model = models.Groups
-        fields = ['id','disease_name','slug']
+        fields = ['id','disease_name','slug','members','posts','comments']
+    
+    def get_members(self,instance):
+        return instance.patient_set.all().count()
+    
+    def get_posts(self,instance):
+        return models.Posts.objects.filter(group=instance).count() 
+    
+    def get_comments(self,instance):
+        return models.Comments.objects.filter(post__group=instance).count()
 
 class GroupDescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Groups
         fields = ['id','description']
+
+class JoinGroupSerializer(serializers.Serializer):
+    slug = serializers.SlugField(max_length = 100)
+
+    # check if the disease exists in db
+    def validate_disease_name(self,slug):
+        instance = get_model_object(models.Groups, {'slug': slug})
+        if instance:
+            return slug
+        raise serializers.ValidationError("Disease does not exists", 400)
+
+class PostQuestionOrExperienceSerializer(serializers.ModelSerializer):
+    disease_name = serializers.CharField(max_length=100,write_only=True)
+
+    class Meta:
+        model = models.Posts
+        fields = ['post_type','post','disease_name']
+        
     
+    def create(self, validated_data):
+        
+        disease = get_model_object(models.Groups,{'disease_name__iexact': validated_data.get('disease_name')})
+        
+        if disease:
+            try:
+                instance = models.Posts.objects.create(
+                    posted_by = self.context.get('user'),
+                    post = validated_data.get('post'),
+                    post_type = validated_data.get('post_type'),
+                    group = disease
+                )
+                
+                return instance
+                
+            except Exception as e:
+                raise serializers.ValidationError(detail="server issue",code=500)
+        raise serializers.ValidationError(detail="Disease not found",code=400)
