@@ -1,29 +1,84 @@
-import React from 'react';
-
+import React,{useEffect, useState, useContext} from 'react';
+import Axios from 'axios';
 import './MyPosts.scss';
+import {BASEURL} from '../../shared/BASEURL';
+import {TOKEN_HANDLER} from '../../shared/TOKEN_HANDLER';
+import Loader from '../Loader/Loader';
+import htmlToText from 'html-to-text';
 
 const MyPosts = () => {
+
+    const [allPosts,setAllPosts] = useState([])
+    const {getToken}  = useContext(TOKEN_HANDLER)
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        Axios.get(`${BASEURL}/api/patient/posts/`,{
+            headers: {
+                Authorization: `Token ${getToken()}`
+            }
+        })
+        .then(resp => {
+            setAllPosts(resp.data);
+            setIsLoaded(true);
+        })
+        .catch(err => {
+            console.log(err.response);
+            setIsLoaded(true);
+        })
+    },[]);
+
     return (
         <div>
             <h2 className="heading__tertiary pb-3">My POSTS</h2>
-            <div className="my-posts">
-                <div className="my-posts__content">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veniam ipsa quo quidem mollitia suscipit reprehenderit blanditiis quasi veritatis vitae unde repudiandae voluptates, natus consequatur totam, ipsam deleniti distinctio aliquam soluta!
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat repudiandae recusandae voluptatibus facere, esse aperiam delectus quidem, consequuntur fugit voluptate quaerat quas vitae ut voluptates deserunt similique accusamus? In, error.
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laudantium deleniti voluptate obcaecati, libero possimus sit illo, labore maiores laboriosam veritatis cum optio exercitationem temporibus deserunt beatae asperiores velit, ullam soluta!
-                </div>
-                <div className="my-posts__group">
-                    <p>
-                        Group: <span>Heart</span>
-                    </p>
-                    <p>
-                        Posted on: <span>10 JAnuary,2020</span>
-                    </p>
-                    <p>
-                        Comments: <span>10</span>
-                    </p>
-                </div>
-            </div>
+            {/* {
+                isLoaded? (
+                    allPosts.map(post => (
+                        <div className="my-posts" key={post.id}>
+                            <div className="my-posts__content">
+                                <span dangerouslySetInnerHTML={{_html:post.post}}></span>
+                            </div>
+                            <div className="my-posts__group">
+                                <p>
+                                    Group: <span>{post.group}</span>
+                                </p>
+                                <p>
+                                    Posted on: <span>{post.date}</span>
+                                </p>
+                                <p>
+                                    Comments: <span>{post.comments}</span>
+                                </p>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <Loader />
+                )
+            } */}
+
+            {
+                allPosts.map(post => (
+                        <div className="my-posts" key={post.id}>
+                            <div className="my-posts__content">
+                                {htmlToText.fromString(post.post)}
+                            </div>
+                            <div className="my-posts__group">
+                                <p>
+                                    Group: <span>{post.group}</span>
+                                </p>
+                                <p>
+                                    Posted on: <span>{post.date}</span>
+                                </p>
+                                <p>
+                                    Comments: <span>{post.comments}</span>
+                                </p>
+                            </div>
+                        </div>
+                    ))
+            }
+
+
+            
         </div>
     );
 };

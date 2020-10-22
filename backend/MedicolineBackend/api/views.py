@@ -183,7 +183,13 @@ class ShowAllNotificationsView(APIView):
         return Response(serializer.data)
         
 
+class ShowMyPosts(APIView):
 
+    serializer_class = api_ser.ShowMyPostsSerializer
+    def get(self,request):
+        posts = models.Posts.objects.filter(posted_by = request.user)
+        serializer = self.serializer_class(instance=posts,many=True)
+        return Response(serializer.data)
 
 
 

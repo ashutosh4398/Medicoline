@@ -15,5 +15,6 @@ urlpatterns = [
     path('patient/signup/',api_view.PatientSignupView.as_view()),
     path('patient/join/',api_view.JoinGroupView.as_view()),
     path('patient/notifications/',api_view.ShowAllNotificationsView.as_view()),
+    path('patient/posts/',api_view.ShowMyPosts.as_view()),
     
 ]

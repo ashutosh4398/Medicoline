@@ -106,3 +106,18 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Notifications
         fields = ['id','post','text','notification_type']
+
+class ShowMyPostsSerializer(serializers.ModelSerializer):
+    group = serializers.CharField(source="group.disease_name",read_only=True)
+    comments = serializers.SerializerMethodField(read_only=True)
+    date = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = models.Posts
+        fields = ['id','post','group','date','comments']
+
+    def get_comments(self,instance):
+        return instance.comments_set.all().count()
+    
+    def get_date(self,instance):
+        return f"{instance.date.strftime('%d %B, %Y')}"
