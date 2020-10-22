@@ -159,5 +159,31 @@ class PostQuestionOrExperienceView(APIView):
         })
         if serializer.is_valid():
             serializer.save()
+            return Response({'success': True})
         return Response(serializer.errors)
+
+class ShowAllNotificationsView(APIView):
+
+    serializer_class = api_ser.NotificationSerializer
+
+    def get(self,request):
+        # get patient instance
+        patient = get_model_object(models.Patient,{'user': request.user})
+        # get all the groups that the patient has subscribed
+        groups = patient.groups.values('disease_name')
+        groups = [x.get('disease_name') for x in groups]    
+        # get all the notifications where initated_by != request.user
+        
+        notifications = models.Notifications.objects.exclude(initiated_by = request.user)
+        
+        # check for notification groups
+        notifications = notifications.filter(post__group__disease_name__in = groups).order_by('-date')
+        
+        serializer = self.serializer_class(instance=notifications,many=True)
+        return Response(serializer.data)
+        
+
+
+
+
 

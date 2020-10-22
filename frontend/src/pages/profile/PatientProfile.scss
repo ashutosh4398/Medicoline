@@ -175,8 +175,9 @@
 }
 
 .user-section {
-    background-image: linear-gradient(to right bottom, $color-user-profile-gradient-1,$color-user-profile-gradient-2);
+    // background-image: linear-gradient(to right bottom, $color-user-profile-gradient-1,$color-user-profile-gradient-2);
     // background-image: linear-gradient(to right bottom, #EAF0F1,#99AAAB);
+    background-color: #EAF0F1;
 }
 
 .bg-menu {
@@ -265,4 +266,8 @@
         padding: 3rem;
         
     }
+}
+
+.jumbotron {
+    background-color: transparent;
 }

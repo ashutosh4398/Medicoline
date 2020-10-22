@@ -70,7 +70,21 @@ class Comments(models.Model):
     commented_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
 class Notifications(models.Model):
-    pass
+    
+    TYPE = (
+        ('experience','experience'),
+        ('comment','comment'),
+        ('question','question')
+    )   
+
+    post = models.ForeignKey(Posts, on_delete = models.CASCADE)
+    initiated_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    text = models.TextField()
+    notification_type = models.CharField(max_length=100,default='',choices=TYPE)
+    date = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.text}"
 
 class Business(models.Model):
     pass

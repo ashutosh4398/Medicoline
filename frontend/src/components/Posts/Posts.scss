@@ -11,4 +11,14 @@
         font-size: 2rem;
         padding: 1rem 3rem;
     }
+
+    .editor {
+        border: 2px solid grey;
+        min-height: 30vh;
+        line-height: .5;
+    }
+
+    editor-tool {
+        border: 2px solid grey;
+    }
 }

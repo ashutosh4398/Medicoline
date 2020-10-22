@@ -85,9 +85,24 @@ class PostQuestionOrExperienceSerializer(serializers.ModelSerializer):
                     post_type = validated_data.get('post_type'),
                     group = disease
                 )
+
+                # now once the post is saved, we need to generate notifications
+                notification = models.Notifications.objects.create(
+                    post = instance,
+                    initiated_by = self.context.get('user'),
+                    text = f"{self.context.get('user').first_name} {self.context.get('user').last_name} has posted {instance.post_type} in '{instance.group.disease_name}' group. Please click to view.",
+                    notification_type = instance.post_type
+                )
                 
                 return instance
                 
             except Exception as e:
+                print(e)
                 raise serializers.ValidationError(detail="server issue",code=500)
         raise serializers.ValidationError(detail="Disease not found",code=400)
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Notifications
+        fields = ['id','post','text','notification_type']
