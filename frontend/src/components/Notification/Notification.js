@@ -9,28 +9,49 @@ import { BASEURL } from '../../shared/BASEURL';
 import Loader from '../Loader/Loader';
 import DetailedPost from '../DetailedPost/DetailedPost';
 
-const Notification = () => {
+const Notification = (props) => {
     const [notifications, setNotifications] = useState([]);
     const [loaded, setLoaded] = useState(false);
     const [detailedId, setDetailedId] = useState(null);
 
     const {getToken} = useContext(TOKEN_HANDLER);
+
     
     useEffect(() => {
-        Axios.get(`${BASEURL}/api/patient/notifications/`,{
-            headers: {
-                Authorization: `Token ${getToken()}`
-            }
-        })
-        .then(resp => {
-            setNotifications(resp.data);
-            setLoaded(true);
-        })
-        .catch(err => {
-            alert(err.response);
-            setLoaded(true);
-        })
-    },[]);
+        const type = props.location?.type;
+
+        if (type === 'questions') {
+            Axios.get(`${BASEURL}/api/doctor/show-questions/`,{
+                headers: {
+                    Authorization: `Token ${getToken()}`
+                }
+            })
+            .then(resp => {
+                setNotifications(resp.data);
+                setLoaded(true);
+            })
+            .catch(err => {
+                alert(err.response);
+                setLoaded(true);
+            })
+        }
+        else {
+            Axios.get(`${BASEURL}/api/patient/notifications/`,{
+                headers: {
+                    Authorization: `Token ${getToken()}`
+                }
+            })
+            .then(resp => {
+                setNotifications(resp.data);
+                setLoaded(true);
+            })
+            .catch(err => {
+                alert(err.response);
+                setLoaded(true);
+            })
+        }
+        
+    },[detailedId]);
 
     
     if (detailedId) {
@@ -43,7 +64,11 @@ const Notification = () => {
 
     return (
         <>
-            <h2 className="heading__tertiary pb-3">Notifications</h2>
+            <h2 className="heading__tertiary pb-3"> {props.location?.type === 'questions'? 'Questions' : 'Notifications'}</h2>
+
+            {
+                (notifications.length === 0 && loaded)? <h2 className="heading__tertiary pb-3">Nothing to show</h2> : ''
+            }
 
             {
                 loaded? (

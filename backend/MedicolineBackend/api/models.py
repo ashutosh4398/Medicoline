@@ -34,10 +34,20 @@ class Patient(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     groups = models.ManyToManyField(Groups,symmetrical=False)
 
+class Specialization(models.Model):
+    specialization_name = models.CharField(max_length = 100)
+
+    def __str__(self):
+        return f"{self.specialization_name}"
 
 class Doctor(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    specialization = models.ForeignKey(Specialization,on_delete=models.CASCADE)
     groups = models.ManyToManyField(Groups,symmetrical=False)
+    qualification_certificate = models.FileField(upload_to="doctor/")
+    address = models.TextField(default='')
+    def __str__(self):
+        return f"{self.user.email} || {self.specialization.specialization_name}"
 
 
 

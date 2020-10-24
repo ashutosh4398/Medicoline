@@ -20,6 +20,7 @@ const Posts = () => {
         post: EditorState.createEmpty()
     })
 
+    
     const [para, setPara] = useState(false);
 
     const handleSubmit = e => {
@@ -99,12 +100,6 @@ const Posts = () => {
                     
                 </div>
                 <div className="form-group">
-                    {/* <CKEditor
-                        className="post-editor__editor"
-                        editor={ClassicEditor}
-                        content={postDetails.post}
-                        onChange = {(e,editor) => { setPostDetails({...postDetails,post: editor.getData()})}}
-                    /> */}
 
                     <Editor
                     toolbarClassName="editor-tool"

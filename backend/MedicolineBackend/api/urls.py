@@ -23,5 +23,10 @@ urlpatterns = [
     path('patient/notifications/',api_view.ShowAllNotificationsView.as_view()),
     path('patient/posts/',api_view.ShowMyPosts.as_view()),
 
+    # doctor
+    path('doctor/signup/',api_view.DoctorSignupView.as_view()),
+    path('doctor/specialization/',api_view.SpecializationView.as_view()),
+    path('doctor/show-questions/',api_view.ShowAllQuestionsView.as_view()),
+
     
 ]

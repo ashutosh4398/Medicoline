@@ -8,6 +8,7 @@ import Homepage from './pages/Homepage/Homepage';
 import PatientLogin from './pages/Patient/PatientLogin/PatientLogin';
 import PatientSignup from './pages/Patient/PatientLogin/PatientSignup';
 import PatientProfile from './pages/profile/PatientProfile';
+import DoctorProfile from './pages/profile/DoctorProfile';
 
 export const Router = () => {
     return (
@@ -23,6 +24,7 @@ export const Router = () => {
                 
                 <Route path="/doctor/signup/" component={DoctorSignup}/>
                 <Route path="/doctor/login/" component={DoctorLogin}/>
+                <Route path="/doctor/profile/" component={DoctorProfile}/>
                 
             </Switch>
         </BrowserRouter>

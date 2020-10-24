@@ -22,6 +22,39 @@ class PatientSignupSerializer(serializers.Serializer):
         if data['password'] != data['confirm_password']:
             raise serializers.ValidationError('Passwords not matched',code=400)
         return data
+
+class DoctorSignupSerializer(serializers.Serializer):
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    email = serializers.CharField()
+    phone = serializers.CharField()
+    password = serializers.CharField()
+    confirm_password = serializers.CharField()
+    address = serializers.CharField()
+    specialization = serializers.CharField()
+    qualification_certificate = serializers.FileField()
+    
+    def validate_phone(self,phone):
+        instance = get_model_object(models.CustomUser,{'mobile': phone})
+        
+        if instance:
+            raise serializers.ValidationError('Phone already taken',code=400)
+        return phone
+
+    def validate_email(self,email):
+        # checking for existing user with same email
+        instance = get_model_object(models.CustomUser, {'email': email})
+        if instance:
+            raise serializers.ValidationError('Email address already taken',code=400)
+        else:
+            return email
+    
+    def validate(self,data):
+        # checking if both the passwords are matched
+        if data['password'] != data['confirm_password']:
+            raise serializers.ValidationError('Passwords not matched',code=400)
+        return data
+
     
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -160,10 +193,18 @@ class PostCommentSerializer(serializers.ModelSerializer):
         
         if post:
             try:
+                is_doctor = False
+                # check who is commenting
+                doctor = get_model_object(models.Doctor, {'user': user})
+                
+                if doctor:
+                    is_doctor = True
+                
                 comment = models.Comments.objects.create(
                     post = post,
                     comment = validated_data.get('comment'),
-                    commented_by = user
+                    commented_by = user,
+                    is_doctor = is_doctor
                 )
 
                 # now once the post is saved, we need to generate notifications

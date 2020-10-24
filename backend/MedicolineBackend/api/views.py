@@ -13,6 +13,7 @@ from rest_framework import status
 import api.serializers as api_ser
 
 from django.contrib.auth import authenticate
+from rest_framework.parsers import JSONParser,FormParser, MultiPartParser
 
 from api.utils import get_model_object 
 
@@ -46,6 +47,53 @@ class PatientSignupView(APIView):
 
         return Response(serializer.errors)
 
+class DoctorSignupView(APIView):
+    serializer_class = api_ser.DoctorSignupSerializer
+    parser_classes = [FormParser,MultiPartParser,JSONParser]
+    permission_classes = [AllowAny]
+
+    def post(self,request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            # create customuser instance
+            custom_user = models.CustomUser.objects.create_user(
+                first_name = 'Dr.' + serializer.validated_data.get('first_name'),
+                last_name = serializer.validated_data.get('last_name'),
+                mobile = serializer.validated_data.get('phone'),
+                email = serializer.validated_data.get('email'),
+                username = serializer.validated_data.get('email'),
+                password = serializer.validated_data.get('password'),
+                is_active = False
+            )
+
+            # get specialization instance
+            specialization = get_model_object(models.Specialization,{'specialization_name__iexact': serializer.validated_data.get('specialization')})
+            if specialization:
+
+
+                # creating doctor instance
+                doctor = models.Doctor.objects.create(
+                    user = custom_user,
+                    specialization = specialization,
+                    qualification_certificate = serializer.validated_data.get('qualification_certificate'),
+                    address = serializer.validated_data.get('address')
+                )
+                # create token
+                token = Token.objects.create(user=custom_user)
+
+                return Response(data={'success': 'doctor created successfully'}, status=status.HTTP_201_CREATED)
+            
+            # delete instance if something goes wrong
+            custom_user.delete()
+            return Response({'error': 'Specialization not found'},status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors)
+
+
+class SpecializationView(APIView):
+    permission_classes = [AllowAny]
+    def get(self,request):
+        temp = [x.specialization_name for x in models.Specialization.objects.all()]
+        return Response(temp)
 
 class LoginView(APIView):
     """ Logs in all the entities """
@@ -118,16 +166,31 @@ class UserDetailsView(APIView):
     def get(self,request):
         # preparing queryset
         patient = get_model_object(models.Patient,{'user': request.user})
-        serialized = api_ser.ShowAllGroupsSerializer(patient.groups.all(),many=True)
-        return Response({
-            'username': f"{request.user.first_name} {request.user.last_name}",
-            'groups': serialized.data,
-            'settings': {
-                'first_name': request.user.first_name,
-                'last_name': request.user.last_name,
-                'email': request.user.email
-            }
-        })
+        if patient:
+            serialized = api_ser.ShowAllGroupsSerializer(patient.groups.all(),many=True)
+            return Response({
+                'username': f"{request.user.first_name} {request.user.last_name}",
+                'groups': serialized.data,
+                'settings': {
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name,
+                    'email': request.user.email
+                }
+            })
+        
+        doctor = get_model_object(models.Doctor, {'user': request.user})
+        if doctor:
+            groups = doctor.groups.all()
+            serializer = api_ser.ShowAllGroupsSerializer(groups,many=True)
+            return Response({
+                'username': f"{request.user.first_name} {request.user.last_name}",
+                'groups': serializer.data,
+                'settings': {
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name,
+                    'email': request.user.email
+                }
+            })
 
 class JoinGroupView(APIView):
     """ Allows the user to join a particular group """
@@ -174,18 +237,60 @@ class ShowAllNotificationsView(APIView):
     def get(self,request):
         # get patient instance
         patient = get_model_object(models.Patient,{'user': request.user})
-        # get all the groups that the patient has subscribed
-        groups = patient.groups.values('disease_name')
-        groups = [x.get('disease_name') for x in groups]    
+        if patient:
+            
+            # get all the groups that the patient has subscribed
+            groups = patient.groups.values('disease_name')
+            groups = [x.get('disease_name') for x in groups]    
+        
+        doctor = get_model_object(models.Doctor,{'user': request.user})
+        if doctor:
+            groups = doctor.groups.values('disease_name')
+            groups = [x.get('disease_name') for x in groups]    
         # get all the notifications where initated_by != request.user
         
         notifications = models.Notifications.objects.exclude(initiated_by = request.user)
         
         # check for notification groups
         notifications = notifications.filter(post__group__disease_name__in = groups).order_by('-date')
+        if doctor:
+            notifications = notifications.filter(notification_type = 'experience')
+            
+            
         
         serializer = self.serializer_class(instance=notifications,many=True)
         return Response(serializer.data)
+        
+
+class ShowAllQuestionsView(APIView):
+
+    serializer_class = api_ser.NotificationSerializer
+    
+    def get(self,request):
+        doctor = get_model_object(models.Doctor,{'user': request.user})
+
+        if doctor:
+            groups = doctor.groups.all()
+            groups = [x.disease_name for x in groups]
+            # get all posts of type question and present in same group as dr.
+            questions = models.Posts.objects.filter(
+                            post_type = 'question',
+                            group__disease_name__in = groups
+                        )
+            # now check whether the dr. has previously commented
+            temp = []
+            for each in questions:
+                if each.comments_set.filter(commented_by = request.user).exists():
+                    temp.append(each)
+            
+            print(temp)
+            notifications = models.Notifications.objects.exclude(post__in = temp).filter(notification_type='question')
+            
+            serializer = self.serializer_class(instance = notifications, many=True)
+            return Response(serializer.data)
+        
+        return Response({'error': 'Not doctor account'},status=400)
+
         
 
 class ShowMyPosts(APIView):
@@ -214,6 +319,7 @@ class ChangePasswordView(APIView):
             return Response({'error': 'incorrect password'},status=status.HTTP_400_BAD_REQUEST)
         
         request.user.set_password(new_password)
+        request.user.save()
         return Response({'success': 'password changed successfully'})
 
 
@@ -230,7 +336,7 @@ class PostCommentView(APIView):
     serializer_class = api_ser.PostCommentSerializer
 
     def get(self,request,post_id=None):
-        queryset = models.Comments.objects.filter(post__id = post_id).order_by('-date')
+        queryset = models.Comments.objects.filter(post__id = post_id).order_by('-is_doctor','-date')
         serializer = self.serializer_class(instance=queryset,many=True)
         return Response(serializer.data)
 
@@ -242,3 +348,8 @@ class PostCommentView(APIView):
             serializer = self.serializer_class(instance=queryset,many=True)
             return Response({'success': '1','comments': serializer.data})
         return Response(serializer.errors)
+
+class StatisticsView(APIView):
+
+    def get(self,request):
+        pass

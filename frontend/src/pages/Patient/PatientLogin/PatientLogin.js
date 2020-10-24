@@ -29,6 +29,7 @@ const PatientLogin = () => {
         .then(resp => {
             StoreToken(resp.data?.token);
             setLogin({...login,error: false});
+            localStorage.setItem('role','patient');
             history.push('/patient/profile/');
         })
         .catch(err => {

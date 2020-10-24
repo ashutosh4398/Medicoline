@@ -49,7 +49,7 @@ const PatientSettings = () => {
             }
         })
         .then(resp => {
-
+            console.log(resp.data);
             if (resp.data.hasOwnProperty('success')) {
                 setPasswordSettings({
                     password: '',

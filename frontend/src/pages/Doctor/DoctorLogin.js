@@ -1,11 +1,47 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React,{useState,useContext} from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import Navigation from '../../components/Navbar/Navigation';
 import doctor_png from '../../assets/doctor.png';
-
+import Axios from 'axios';
 import './Doctor.scss';
+import { BASEURL } from '../../shared/BASEURL';
+import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
 
 const DoctorLogin = () => {
+
+    const {StoreToken} = useContext(TOKEN_HANDLER);
+
+    const history = useHistory();
+
+    const [login,setLogin] = useState({
+        email: '',
+        password: '',
+        error: ''
+    })
+
+    const formHandling = (e) => {
+        e.preventDefault();
+        Axios.post(`${BASEURL}/api/login/`,{
+            email: login.email,
+            password: login.password,
+            status: 'doctor',
+        })
+        .then(resp => {
+            if (resp.data.hasOwnProperty('token')) {
+                
+                StoreToken(resp.data.token)
+                localStorage.setItem('role','doctor');
+                history.push('/doctor/profile/');
+                
+            }
+        })
+        .catch(err => {
+            if(err.response.data.hasOwnProperty('error')) {
+                setLogin({...login,error: 'Account not found.'})
+            }
+        })
+    }
+
     return (
         <div>
             <Navigation classname={'active'} />
@@ -18,13 +54,22 @@ const DoctorLogin = () => {
                         <p className="form-caption">
                             Login with your credentials and make a difference in the society
                         </p>
-                        <form>
+                        <form onSubmit={formHandling}>
                             <div className="form-group">
-                                <input type="email" className="form-control" placeholder="Email Address" />
+                                <input 
+                                required
+                                value={login.email}
+                                onChange={e => setLogin({...login,email: e.target.value})}
+                                type="email" className="form-control" placeholder="Email Address" />
                             </div>
 
                             <div className="form-group">
-                                <input type="password" className="form-control" placeholder="Password" />
+                                <input 
+                                required
+                                value={login.password}
+                                onChange={e => setLogin({...login,password: e.target.value})}
+                                type="password" className="form-control" placeholder="Password" />
+                                <p className="text-danger">{login.error}</p>
                             </div>
 
                             <div className="form-group text-center py-2">
