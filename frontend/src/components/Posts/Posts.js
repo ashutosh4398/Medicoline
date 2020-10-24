@@ -1,8 +1,4 @@
 import React,{useContext, useState} from 'react';
-
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
 import { Editor } from 'react-draft-wysiwyg';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import {EditorState,convertToRaw} from 'draft-js';

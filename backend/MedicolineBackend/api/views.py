@@ -121,7 +121,12 @@ class UserDetailsView(APIView):
         serialized = api_ser.ShowAllGroupsSerializer(patient.groups.all(),many=True)
         return Response({
             'username': f"{request.user.first_name} {request.user.last_name}",
-            'groups': serialized.data
+            'groups': serialized.data,
+            'settings': {
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+                'email': request.user.email
+            }
         })
 
 class JoinGroupView(APIView):
@@ -192,4 +197,48 @@ class ShowMyPosts(APIView):
         return Response(serializer.data)
 
 
+class ChangePasswordView(APIView):
 
+    def put(self,request):
+        new_password  = request.data.get('new_password')
+        old_password = request.data.get('old_password')
+        confirm_password = request.data.get('confirm_password')
+
+        if (len(new_password.strip()) < 8) :
+            return Response({'error': 'password less than 8'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        elif (new_password != confirm_password):
+            return Response({'error': 'passwords not matched'},status=status.HTTP_400_BAD_REQUEST)
+
+        elif (not request.user.check_password(old_password)):
+            return Response({'error': 'incorrect password'},status=status.HTTP_400_BAD_REQUEST)
+        
+        request.user.set_password(new_password)
+        return Response({'success': 'password changed successfully'})
+
+
+class ShowDetailedPostView(APIView):
+    serializer_class = api_ser.ShowDetailedPostSerializer
+
+    def get(self,request,post_id):
+        # get Post instance
+        post = get_model_object(models.Posts,{'id': post_id})
+        serializer = self.serializer_class(instance=post)
+        return Response(serializer.data)
+
+class PostCommentView(APIView):
+    serializer_class = api_ser.PostCommentSerializer
+
+    def get(self,request,post_id=None):
+        queryset = models.Comments.objects.filter(post__id = post_id).order_by('-date')
+        serializer = self.serializer_class(instance=queryset,many=True)
+        return Response(serializer.data)
+
+    def post(self,request):
+        serializer = self.serializer_class(data=request.data,context={'user': request.user})
+        if serializer.is_valid():
+            serializer.save()
+            queryset = models.Comments.objects.filter(post__id = serializer.validated_data.get('post_id')).order_by('-date')
+            serializer = self.serializer_class(instance=queryset,many=True)
+            return Response({'success': '1','comments': serializer.data})
+        return Response(serializer.errors)

@@ -140,8 +140,8 @@ const PatientProfile = (props) => {
                                     </li>
                                 </Link>
 
-                                <Link to="/patient/profile/settings/">
-                                    <li className="side-nav__item">
+                                <Link to="/patient/profile/settings/" onClick={e => setCurrentSelected('settings')}>
+                                    <li className={`side-nav__item ${currentSelected === 'settings'? 'side-nav__item--active' : ''}`}>
                                         Settings
                                     </li>
                                 </Link>

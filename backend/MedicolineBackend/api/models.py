@@ -60,6 +60,8 @@ class Posts(models.Model):
     # allows the user to share post only in a particular group
     group = models.ForeignKey(Groups, on_delete=models.CASCADE) 
 
+    def __str__(self):
+        return f"{self.id}"
 
 
 class Comments(models.Model):
@@ -68,6 +70,7 @@ class Comments(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     # since doctors can also comment on a particular post
     commented_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    is_doctor = models.BooleanField(default=False)
 
 class Notifications(models.Model):
     

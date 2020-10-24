@@ -7,10 +7,12 @@ import Axios from 'axios';
 import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
 import { BASEURL } from '../../shared/BASEURL';
 import Loader from '../Loader/Loader';
+import DetailedPost from '../DetailedPost/DetailedPost';
 
 const Notification = () => {
     const [notifications, setNotifications] = useState([]);
     const [loaded, setLoaded] = useState(false);
+    const [detailedId, setDetailedId] = useState(null);
 
     const {getToken} = useContext(TOKEN_HANDLER);
     
@@ -31,7 +33,12 @@ const Notification = () => {
     },[]);
 
     
-
+    if (detailedId) {
+        return (
+            <DetailedPost post_id={detailedId} setDetailedId = {setDetailedId}/>
+        )
+        
+    }
     
 
     return (
@@ -41,7 +48,7 @@ const Notification = () => {
             {
                 loaded? (
                     notifications.map(notification => (
-                        <div className="notification-card" key={notification.id}>
+                        <div className="notification-card" key={notification.id} onClick={e => setDetailedId(notification.post)}>
                             <div className="notification-card__left-side">
                                 <img src={notification.notification_type === 'question'? question_svg : notification.notification_type === 'experience'? experience_svg: comment_svg} alt="" className=""/>
                             </div>

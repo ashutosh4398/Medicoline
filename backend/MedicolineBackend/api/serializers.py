@@ -121,3 +121,62 @@ class ShowMyPostsSerializer(serializers.ModelSerializer):
     
     def get_date(self,instance):
         return f"{instance.date.strftime('%d %B, %Y')}"
+
+class ShowDetailedPostSerializer(serializers.ModelSerializer):
+    date = serializers.SerializerMethodField(read_only = True)
+    group = serializers.CharField(source="group.disease_name",read_only=True)
+    posted_by = serializers.SerializerMethodField(read_only = True)
+    class Meta:
+        model = models.Posts
+        fields = ['id','post','date','post_type','group','posted_by']
+
+    def get_posted_by(self,instance):
+        return f"{instance.posted_by.first_name} {instance.posted_by.last_name}"
+
+    def get_date(self,instance):
+        return f"{instance.date.strftime('%d %B, %Y')}"
+
+class PostCommentSerializer(serializers.ModelSerializer):
+    post_id = serializers.CharField()
+    commented_by = serializers.SerializerMethodField(read_only=True)
+    date = serializers.SerializerMethodField(read_only=True)
+    
+    
+    class Meta:
+        model = models.Comments
+        fields = ['id','post_id','comment','commented_by','date','is_doctor']
+    
+    def get_commented_by(self,instance):
+        return f"{instance.commented_by.first_name} {instance.commented_by.last_name}"
+    
+    def get_date(self,instance):
+        return f"{instance.date.strftime('%d %B, %Y')}"
+    
+
+    
+    def create(self,validated_data):
+        user = self.context.get('user')
+        post = get_model_object(models.Posts,{'id': validated_data.get('post_id')})
+        
+        if post:
+            try:
+                comment = models.Comments.objects.create(
+                    post = post,
+                    comment = validated_data.get('comment'),
+                    commented_by = user
+                )
+
+                # now once the post is saved, we need to generate notifications
+                notification = models.Notifications.objects.create(
+                    post = post,
+                    initiated_by = self.context.get('user'),
+                    text = f"{self.context.get('user').first_name} {self.context.get('user').last_name} has posted comment in '{post.group.disease_name}' group. Please click to view.",
+                    notification_type = 'comment'
+                )
+
+                return comment
+            except Exception as e:
+                print(e)
+                raise serializers.ValidationError(detail="some error",code=400)
+        
+        raise serializers.ValidationError(detail='Post not found',code=400)
