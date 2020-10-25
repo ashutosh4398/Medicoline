@@ -3,21 +3,15 @@ import Navigation from '../../components/Navbar/Navigation';
 import user_default from '../../assets/user.svg';
 import {Link, Route, Switch, useHistory} from 'react-router-dom';
 
-
-import Chat from '../../components/Chat/Chat';
-import Notification from '../../components/Notification/Notification';
 import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
 import Axios from 'axios';
 import { BASEURL } from '../../shared/BASEURL';
-import Posts from '../../components/Posts/Posts';
 // icons for navigation open and close
 import {GiHamburgerMenu} from 'react-icons/gi';
 import {FaTimes} from 'react-icons/fa';
 
 
 import './PatientProfile.scss';
-import MyPosts from '../../components/MyPosts/MyPosts';
-import ProfileDisease from '../../components/ProfileDisease/ProfileDisease';
 import PatientSettings from '../../components/PatientSettings/PatientSettings';
 import PostListings from '../../components/PostListings/PostListings';
 import ListingPage from '../ListingPage/ListingPage';
@@ -25,7 +19,6 @@ import ListingPage from '../ListingPage/ListingPage';
 const BusinessProfile = (props) => {
 
     const [isOpen, setIsOpen] = useState(false);
-    const [currentSelected, setCurrentSelected] = useState(null);
     const toggle = () => setIsOpen(!isOpen);
     const history = useHistory();
 
@@ -86,18 +79,6 @@ const BusinessProfile = (props) => {
                                 </div>
                             </div>
                         </div>
-                        {/* <div className="patient-information__activity--group-selection">
-                            <label htmlFor="group-select" className="font-weight-bold">Selected Group</label>
-                            <select id="group-select" className="form-control">
-                                <option value="All" disabled selected>All</option>
-                                {
-                                    userDetails.groups.map(eachGroup => (
-                                        <option id={eachGroup.id} value={eachGroup.disease_name} >{eachGroup.disease_name}</option>
-                                    ))
-                                }
-                                
-                            </select>
-                        </div> */}
                     </div>
                 </div>
             </div>
@@ -108,21 +89,21 @@ const BusinessProfile = (props) => {
                     <div className="user-profile__column user-profile__column--sidenav">
                         <div className="">
                             <ul className="side-nav">
-                                <Link to="/business/profile/" onClick={() => setCurrentSelected('write')}>
-                                    <li className={`side-nav__item ${currentSelected === 'write'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/business/profile/">
+                                    <li className='side-nav__item'>
                                         Create Listings
                                     </li>
                                 </Link>
 
-                                <Link to="/business/profile/listings/" onClick={() => setCurrentSelected('notifications')}>
-                                    <li className={`side-nav__item ${currentSelected === 'notifications'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/business/profile/listings/">
+                                    <li className='side-nav__item'>
                                         My Listings
                                     </li>
                                 </Link>
 
                                 
-                                <Link to="/business/profile/settings/" onClick={e => setCurrentSelected('settings')}>
-                                    <li className={`side-nav__item ${currentSelected === 'settings'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/business/profile/settings/" >
+                                    <li className='side-nav__item'>
                                         Settings
                                     </li>
                                 </Link>
@@ -147,15 +128,19 @@ const BusinessProfile = (props) => {
                         </div>
                         <div className={`bg-menu ${isOpen ? 'menu-open' : '' }`}></div>
                         <div className={`open-menu-items ${isOpen? 'open-menu-items--active' : 'open-menu-items--inactive'}`}>
-                            <ul>
-                                <li onClick={toggle}>Write a post</li>
-                                <li onClick={toggle}>Notifications</li>
-                                <li onClick={toggle}>Posts</li>
-                                <li onClick={toggle}>Comments</li>
-                                <li onClick={toggle}>Groups</li>
-                                <li onClick={toggle}>Services</li>
-                                <li onClick={toggle}>Settings</li>
-                                <li onClick={toggle}>Logout</li>
+                        <ul className="small-width-menu">
+                                <Link to="/business/profile/" className="side-nav__item">
+                                    <li onClick={toggle}>Create Listings</li>
+                                </Link>
+                                <Link className="side-nav__item" to="/business/profile/listings/">
+                                    <li  onClick={toggle}>My Listings</li>
+                                </Link>
+                                <Link className="side-nav__item" to="/business/profile/settings/">
+                                    <li  onClick={toggle}>Settings</li>
+                                </Link>
+                                <Link className="side-nav__item" to="/business/login/" onClick={deleteToken}>
+                                    <li  onClick={toggle}>Logout</li>
+                                </Link>
                             </ul>
                         </div>
                         <main className="profile-main-content-container">

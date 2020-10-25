@@ -39,7 +39,7 @@ const BusinessLogin = () => {
         })
     }
 
-    if (getToken()) {
+    if (getToken() && localStorage.getItem('role') === 'business') {
         history.push('/business/profile/');
     }
 

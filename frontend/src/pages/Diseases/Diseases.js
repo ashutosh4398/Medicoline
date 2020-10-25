@@ -13,6 +13,8 @@ const Diseases = () => {
     // loader states initially false
     const [isLoaded, setIsLoaded] = useState(false)
 
+    
+
     // on component did mount
     useEffect(() => {
         Axios.get(`${BASEURL}/api/diseases/`)

@@ -3,8 +3,6 @@ import Navigation from '../../components/Navbar/Navigation';
 import user_default from '../../assets/user.svg';
 import {Link, Route, Switch, useHistory} from 'react-router-dom';
 
-
-import Chat from '../../components/Chat/Chat';
 import Notification from '../../components/Notification/Notification';
 import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
 import Axios from 'axios';
@@ -24,7 +22,6 @@ import StatsPage from '../StatsPage/StatsPage';
 const PatientProfile = (props) => {
 
     const [isOpen, setIsOpen] = useState(false);
-    const [currentSelected, setCurrentSelected] = useState(null);
     const toggle = () => setIsOpen(!isOpen);
     const history = useHistory();
 
@@ -105,14 +102,14 @@ const PatientProfile = (props) => {
                     <div className="user-profile__column user-profile__column--sidenav">
                         <div className="">
                             <ul className="side-nav">
-                                <Link to="/doctor/profile/" onClick={() => setCurrentSelected('write')}>
-                                    <li className={`side-nav__item ${currentSelected === 'write'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/doctor/profile/">
+                                    <li className='side-nav__item'>
                                         Write a POST
                                     </li>
                                 </Link>
 
-                                <Link to="/doctor/profile/notification/" onClick={() => setCurrentSelected('notifications')}>
-                                    <li className={`side-nav__item ${currentSelected === 'notifications'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/doctor/profile/notification/">
+                                    <li className='side-nav__item'>
                                         Notifications
                                     </li>
                                 </Link>
@@ -120,25 +117,25 @@ const PatientProfile = (props) => {
                                 <Link to={{
                                     pathname: "/doctor/profile/show-questions/",
                                     type: 'questions'
-                                }} onClick={() => setCurrentSelected('questions')}>
-                                    <li className={`side-nav__item ${currentSelected === 'questions'? 'side-nav__item--active' : ''}`}>
+                                }} >
+                                    <li className='side-nav__item'>
                                         Questions
                                     </li>
                                 </Link>
 
-                                <Link to="/doctor/profile/my-posts/" onClick={() => setCurrentSelected('posts')}>
-                                    <li className={`side-nav__item ${currentSelected === 'posts'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/doctor/profile/my-posts/">
+                                    <li className='side-nav__item'>
                                         Posts
                                     </li>
                                 </Link>
 
-                                <Link to="/doctor/profile/stats/" onClick={() => setCurrentSelected('stats')}>
-                                    <li className={`side-nav__item ${currentSelected === 'stats'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/doctor/profile/stats/">
+                                    <li className='side-nav__item'>
                                         Statistics
                                     </li>
                                 </Link>
-                                <Link to="/doctor/profile/settings/" onClick={() => setCurrentSelected('groups')}>
-                                    <li className={`side-nav__item ${currentSelected === 'groups'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/doctor/profile/settings/">
+                                    <li className='side-nav__item'>
                                         Settings
                                     </li>
                                 </Link>                              
@@ -163,15 +160,31 @@ const PatientProfile = (props) => {
                         </div>
                         <div className={`bg-menu ${isOpen ? 'menu-open' : '' }`}></div>
                         <div className={`open-menu-items ${isOpen? 'open-menu-items--active' : 'open-menu-items--inactive'}`}>
-                            <ul>
-                                <li onClick={toggle}>Write a post</li>
-                                <li onClick={toggle}>Notifications</li>
-                                <li onClick={toggle}>Posts</li>
-                                <li onClick={toggle}>Comments</li>
-                                <li onClick={toggle}>Groups</li>
-                                <li onClick={toggle}>Services</li>
-                                <li onClick={toggle}>Settings</li>
-                                <li onClick={toggle}>Logout</li>
+                        <ul className="small-width-menu">
+                                <Link to="/doctor/profile/" className="side-nav__item">
+                                    <li onClick={toggle}>Write a post</li>
+                                </Link>
+                                <Link className="side-nav__item" to="/doctor/profile/notification/">
+                                    <li  onClick={toggle}>Notifications</li>
+                                </Link>
+                                <Link className="side-nav__item" to="/doctor/profile/show-questions/">
+                                    <li  onClick={toggle}>Questions</li>
+                                </Link>
+                                
+                                <Link className="side-nav__item" to="/doctor/profile/my-posts/">
+                                    <li  onClick={toggle}>POSTS</li>
+                                </Link>
+                                
+                                <Link className="side-nav__item" to="/doctor/profile/stats/">
+                                    <li  onClick={toggle}>Statistics</li>
+                                </Link>
+                                
+                                <Link className="side-nav__item" to="/doctor/profile/settings/">
+                                    <li  onClick={toggle}>Settings</li>
+                                </Link>
+                                <Link className="side-nav__item" to="/patient/login/" onClick={deleteToken}>
+                                    <li  onClick={toggle}>Logout</li>
+                                </Link>
                             </ul>
                         </div>
                         <main className="profile-main-content-container">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     Collapse,
     Navbar,
@@ -38,6 +38,7 @@ const Navigation = ({nav_items=[
 ],classname=''}) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
+    
 
     window.onscroll = () => {
         const top = window.scrollY;

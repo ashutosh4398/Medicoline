@@ -39,7 +39,7 @@ const PatientLogin = () => {
         })
     }
 
-    if (getToken()) {
+    if (getToken() && localStorage.getItem('role') === 'patient') {
         history.push('/patient/profile/');
     }
 

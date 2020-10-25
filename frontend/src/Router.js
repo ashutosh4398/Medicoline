@@ -12,7 +12,6 @@ import DoctorProfile from './pages/profile/DoctorProfile';
 import BusinessSignup from './pages/Business/BusinessSignup';
 import BusinessLogin from './pages/Business/BusinessLogin';
 import BusinessProfile from './pages/profile/BusinessProfile';
-import ListingPage from './pages/ListingPage/ListingPage';
 
 export const Router = () => {
     return (

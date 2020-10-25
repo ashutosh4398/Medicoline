@@ -1,5 +1,4 @@
 import React from 'react';
-import doctor_svg from '../../assets/doctor.svg';
 import './Card.scss';
 
 const Card = ({image,heading,description}) => {

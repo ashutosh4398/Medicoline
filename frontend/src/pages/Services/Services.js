@@ -4,7 +4,6 @@ import Axios from 'axios';
 
 import './Services.scss';
 import { BASEURL } from '../../shared/BASEURL';
-import ListingCard from '../../components/ListingCard/ListingCard';
 import ListingDetailCard from '../../components/ListingCard/ListingDetailCard';
 const Services = () => {
 

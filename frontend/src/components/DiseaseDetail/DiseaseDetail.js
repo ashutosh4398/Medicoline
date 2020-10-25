@@ -3,7 +3,6 @@ import Axios from 'axios';
 import { BASEURL } from '../../shared/BASEURL';
 import Loader from '../Loader/Loader';
 import './DiseaseDetail.scss';
-import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
 
 // pass the slug for particulat in props 
 const DiseaseDetail = ({slug}) => {

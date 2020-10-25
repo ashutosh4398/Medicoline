@@ -1,12 +1,13 @@
-import React,{useState} from 'react';
+import React,{useState, useContext} from 'react';
 import Navigation from '../../components/Navbar/Navigation';
-import {Link} from 'react-router-dom';
+import {Link,useHistory} from 'react-router-dom';
 
 
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { BASEURL } from '../../shared/BASEURL';
 import './Business.scss';
 import Axios from 'axios';
+import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
 
 const BusinessSignup = () => {
 
@@ -20,6 +21,18 @@ const BusinessSignup = () => {
         confirm_password: '',
         confirm_passwordError: null,
     })
+
+    const {getToken} = useContext(TOKEN_HANDLER)
+    const history = useHistory()
+
+
+    if (!getToken() && localStorage.getItem('role') !== 'business') {
+        history.push('/business/login/');
+    }
+
+    if (getToken() && localStorage.getItem('role') === 'business') {
+        history.push('/business/profile/');
+    }
 
     const [modal, setModal] = useState(false);
 

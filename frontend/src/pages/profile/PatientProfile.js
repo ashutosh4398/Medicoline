@@ -3,8 +3,6 @@ import Navigation from '../../components/Navbar/Navigation';
 import user_default from '../../assets/user.svg';
 import {Link, Route, Switch, useHistory} from 'react-router-dom';
 
-
-import Chat from '../../components/Chat/Chat';
 import Notification from '../../components/Notification/Notification';
 import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
 import Axios from 'axios';
@@ -24,7 +22,6 @@ import Services from '../Services/Services';
 const PatientProfile = (props) => {
 
     const [isOpen, setIsOpen] = useState(false);
-    const [currentSelected, setCurrentSelected] = useState(null);
     const toggle = () => setIsOpen(!isOpen);
     const history = useHistory();
 
@@ -107,25 +104,25 @@ const PatientProfile = (props) => {
                     <div className="user-profile__column user-profile__column--sidenav">
                         <div className="">
                             <ul className="side-nav">
-                                <Link to="/patient/profile/" onClick={() => setCurrentSelected('write')}>
-                                    <li className={`side-nav__item ${currentSelected === 'write'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/patient/profile/">
+                                    <li className='side-nav__item'>
                                         Write a POST
                                     </li>
                                 </Link>
 
-                                <Link to="/patient/profile/notification/" onClick={() => setCurrentSelected('notifications')}>
-                                    <li className={`side-nav__item ${currentSelected === 'notifications'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/patient/profile/notification/">
+                                    <li className='side-nav__item'>
                                         Notifications
                                     </li>
                                 </Link>
 
-                                <Link to="/patient/profile/my-posts/" onClick={() => setCurrentSelected('posts')}>
-                                    <li className={`side-nav__item ${currentSelected === 'posts'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/patient/profile/my-posts/" >
+                                    <li className='side-nav__item'>
                                         Posts
                                     </li>
                                 </Link>
-                                <Link to="/patient/profile/groups/" onClick={() => setCurrentSelected('groups')}>
-                                    <li className={`side-nav__item ${currentSelected === 'groups'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/patient/profile/groups/">
+                                    <li className='side-nav__item'>
                                         Groups
                                     </li>
                                 </Link>
@@ -136,8 +133,8 @@ const PatientProfile = (props) => {
                                     </li>
                                 </Link>
 
-                                <Link to="/patient/profile/settings/" onClick={e => setCurrentSelected('settings')}>
-                                    <li className={`side-nav__item ${currentSelected === 'settings'? 'side-nav__item--active' : ''}`}>
+                                <Link to="/patient/profile/settings/">
+                                    <li className='side-nav__item'>
                                         Settings
                                     </li>
                                 </Link>

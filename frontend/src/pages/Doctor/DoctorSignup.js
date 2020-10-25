@@ -1,6 +1,6 @@
 // doctor's login page
-import React, {useState,useEffect} from 'react';
-import { Link } from 'react-router-dom';
+import React, {useState,useEffect,useContext} from 'react';
+import { Link,useHistory } from 'react-router-dom';
 import Navigation from '../../components/Navbar/Navigation';
 import {
     Modal,
@@ -11,6 +11,7 @@ import {
 import Axios from 'axios';
 import './Doctor.scss';
 import { BASEURL } from '../../shared/BASEURL';
+import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
 
 const initialState = {
     first_name: '',
@@ -45,6 +46,14 @@ const DoctorSignup = () => {
             alert('some error occured. Try again later')
         })
     },[]);
+
+    const {getToken} = useContext(TOKEN_HANDLER);
+
+    const history = useHistory()
+
+    if(getToken() && localStorage.getItem('role')==='doctor') {
+        history.push('/doctor/profile/');
+    }
 
     const notify = () => {
         return (

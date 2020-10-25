@@ -9,7 +9,7 @@ import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
 
 const DoctorLogin = () => {
 
-    const {StoreToken} = useContext(TOKEN_HANDLER);
+    const {StoreToken,getToken} = useContext(TOKEN_HANDLER);
 
     const history = useHistory();
 
@@ -40,6 +40,10 @@ const DoctorLogin = () => {
                 setLogin({...login,error: 'Account not found.'})
             }
         })
+    }
+
+    if(getToken() && localStorage.getItem('role')==='doctor') {
+        history.push('/doctor/profile/');
     }
 
     return (

@@ -111,9 +111,14 @@ const DiseaseDetailPage = (props) => {
                 <span className="disease-details__component">
                     <div className="disease-details__btn-groups">
                         <Link to="/diseases/" className="btn btn-outline-primary btn-lg py-3">&larr; Back</Link>
-                        <button
-                        disabled={userDetails.groups.find(eachGroup => eachGroup.slug === slug)? true : false}
-                        onClick={handleSubmit} className="btn cust_btn">Join Group</button>
+                        {
+                            localStorage.getItem('role') === 'patient'? (
+                                <button
+                                disabled={userDetails.groups.find(eachGroup => eachGroup.slug === slug)? true : false}
+                                onClick={handleSubmit} className="btn cust_btn">Join Group</button>
+                            ): ''
+                        }
+                        
                     </div>
                     
                     <DiseaseDetail slug = {props.match?.params?.slug}/>

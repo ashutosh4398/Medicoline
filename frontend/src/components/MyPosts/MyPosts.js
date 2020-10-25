@@ -3,7 +3,6 @@ import Axios from 'axios';
 import './MyPosts.scss';
 import {BASEURL} from '../../shared/BASEURL';
 import {TOKEN_HANDLER} from '../../shared/TOKEN_HANDLER';
-import Loader from '../Loader/Loader';
 import htmlToText from 'html-to-text';
 import DetailedPost from '../DetailedPost/DetailedPost';
 

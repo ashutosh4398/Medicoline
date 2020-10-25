@@ -238,7 +238,7 @@
     position: absolute;
     font-size: 1rem;
     z-index: 10000;
-    width: 80%;
+    width: 50%;
     text-align: center;
     font-size: 1.5rem;
     text-transform: uppercase;
@@ -280,9 +280,24 @@
 
 
 .small-width-menu {
+
+    @media only screen and (min-width: 1000px) {
+        display: none;
+    }
+
     > li {
         cursor: pointer;
         padding: 1rem 0;
         color: black;
+    }
+
+    a {
+        cursor: pointer;
+        padding: 1rem 0;
+        color: black;
+
+        &:hover {
+            text-decoration: none;
+        }
     }
 }

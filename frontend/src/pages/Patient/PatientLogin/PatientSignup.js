@@ -1,6 +1,6 @@
-import React,{useState} from 'react';
+import React,{useState, useContext} from 'react';
 import Navigation from '../../../components/Navbar/Navigation';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Axios from 'axios';
 import { BASEURL } from '../../../shared/BASEURL';
 import {
@@ -12,6 +12,7 @@ import {
 } from 'reactstrap'
 
 import './PatientLogin.scss';
+import { TOKEN_HANDLER } from '../../../shared/TOKEN_HANDLER';
 const initialState = {
     first_name: '',
     first_nameError: '',
@@ -32,6 +33,13 @@ const PatientSignup = () => {
     const [modal, setModal] = useState(false);
 
     const toggle = () => setModal(!modal);
+
+    const {getToken} = useContext(TOKEN_HANDLER);
+    const history = useHistory();
+
+    if(getToken() && localStorage.getItem('role')==='patient') {
+        history.push('/patient/profile/');
+    }
 
     const SuccessFeedBackModal = () => {
         return (
