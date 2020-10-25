@@ -17,6 +17,9 @@ from rest_framework.parsers import JSONParser,FormParser, MultiPartParser
 
 from api.utils import get_model_object 
 
+from datetime import timedelta,datetime
+from django.utils import timezone
+
 # Create your views here.
 class PatientSignupView(APIView):
     """ Creates account for patient """
@@ -89,6 +92,32 @@ class DoctorSignupView(APIView):
         return Response(serializer.errors)
 
 
+class BusinessSignupSerializer(APIView):
+    serializer_class = api_ser.PatientSignupSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            # create a custom user instance
+            user = models.CustomUser.objects.create_user(
+                username = serializer.validated_data.get('email'),
+                first_name = serializer.validated_data.get('first_name'),
+                last_name = serializer.validated_data.get('last_name'),
+                email = serializer.validated_data.get('email'),
+                password = serializer.validated_data.get('password')
+            )
+
+            business = models.Business.objects.create(
+                user = user
+            )
+
+            token = Token.objects.create(user=user)
+
+            return Response(data={'success': 'business created successfully'}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors)
+
 class SpecializationView(APIView):
     permission_classes = [AllowAny]
     def get(self,request):
@@ -129,8 +158,11 @@ class LoginView(APIView):
                             'token': token.key
                         })
                 elif status == 'business':
-                    # TODO: Need to add business login once completed
-                    pass
+                    instance = get_model_object(models.Business,{'user': user})
+                    if instance:
+                        return Response({
+                            'token': token.key
+                        })
                 
                 
             return Response({'error': 'Account not found'},status=400)
@@ -185,6 +217,17 @@ class UserDetailsView(APIView):
             return Response({
                 'username': f"{request.user.first_name} {request.user.last_name}",
                 'groups': serializer.data,
+                'settings': {
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name,
+                    'email': request.user.email
+                }
+            })
+
+        business = get_model_object(models.Business, {'user': request.user})
+        if business:
+            return Response({
+                'username': f"{request.user.first_name} {request.user.last_name}",
                 'settings': {
                     'first_name': request.user.first_name,
                     'last_name': request.user.last_name,
@@ -351,5 +394,94 @@ class PostCommentView(APIView):
 
 class StatisticsView(APIView):
 
-    def get(self,request):
-        pass
+    # permission_classes = [AllowAny]
+
+    def date_format(self,date):
+        return f"{date.strftime('%d %B, %Y')}"
+
+    def get(self,request,option="overall",group=None):
+        doctor = get_model_object(models.Doctor, {'user': request.user})
+        if doctor:
+            if option == 'overall':
+                temp = dict()
+                current_date = timezone.now()
+                for each in range(10,-1,-1):
+                    date = current_date - timedelta(days=each)
+                    # counting the number of questions answered by doctor
+                    comments = models.Comments.objects.filter(date__date = date,commented_by = request.user,post__post_type='question')
+                    temp[self.date_format(date)] = comments.count()
+                
+                return Response(temp)
+
+            elif option == 'distribution':
+                # get groups of doctor
+                groups = [x.disease_name for x in doctor.groups.all()]
+                # count the number of patients in each group
+                
+                temp = {}
+                for each in groups:
+                    temp[each] = models.Patient.objects.filter(groups__disease_name = each).count()
+
+                return Response(temp)
+
+            elif option == 'groupwise' and group:
+                temp = dict()
+                current_date = timezone.now()
+                for each in range(10,-1,-1):
+                    date = current_date - timedelta(days=each)
+                    # counting the number of questions answered by doctor
+                    comments = models.Comments.objects.filter(
+                        date__date = date,
+                        commented_by = request.user,
+                        post__post_type='question',
+                        post__group__disease_name__iexact = group,
+                    )
+
+                    temp[self.date_format(date)] = comments.count()
+                
+                return Response(temp)
+
+            
+
+            else:
+                return Response({'error': 'Invalid choice'},status=400)
+        
+        return Response({'error': 'Doctor account invalid'},status=400)
+
+
+class PostBusinessListing(APIView):
+    
+    serializer_class = api_ser.ListingSignupSerializer
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data,context = {'user': request.user})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'success': '1'})
+        return Response(serializer.errors)
+
+    
+    def get(self, request,listing_id=None):
+        business = get_model_object(models.Business, {'user': request.user})
+        
+        if listing_id:
+            listing = get_model_object(models.Listings, {'id': listing_id})
+            if listing:
+                serializer = self.serializer_class(instance=listing)
+                return Response(serializer.data)
+            else:
+                return Response({'error': 'listing not found'})
+        elif business:
+            queryset = business.listings_set.all()
+            serializer = self.serializer_class(instance=queryset,many=True)
+            return Response(serializer.data)
+        return Response({'error': 'business account not found'})
+
+
+class ListingFilterView(APIView):
+
+    serializer_class = api_ser.ListingSignupSerializer
+
+    def get(self, request, country, state, city):
+        queryset = models.Listings.objects.filter(country__iexact = country, city__iexact=city, state__iexact = state)
+        serializer = self.serializer_class(instance = queryset, many=True)
+        return Response(serializer.data)

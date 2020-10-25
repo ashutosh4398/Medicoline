@@ -19,6 +19,7 @@ import './PatientProfile.scss';
 import MyPosts from '../../components/MyPosts/MyPosts';
 import ProfileDisease from '../../components/ProfileDisease/ProfileDisease';
 import PatientSettings from '../../components/PatientSettings/PatientSettings';
+import StatsPage from '../StatsPage/StatsPage';
 
 const PatientProfile = (props) => {
 
@@ -131,7 +132,7 @@ const PatientProfile = (props) => {
                                     </li>
                                 </Link>
 
-                                <Link to="/doctor/profile/my-posts/" onClick={() => setCurrentSelected('stats')}>
+                                <Link to="/doctor/profile/stats/" onClick={() => setCurrentSelected('stats')}>
                                     <li className={`side-nav__item ${currentSelected === 'stats'? 'side-nav__item--active' : ''}`}>
                                         Statistics
                                     </li>
@@ -140,15 +141,7 @@ const PatientProfile = (props) => {
                                     <li className={`side-nav__item ${currentSelected === 'groups'? 'side-nav__item--active' : ''}`}>
                                         Settings
                                     </li>
-                                </Link>
-
-                                <Link>
-                                    <li className="side-nav__item">
-                                       Chat
-                                    </li>
-                                </Link>
-
-                                
+                                </Link>                              
 
                                 <li className="side-nav__item" onClick={deleteToken}>
                                     Logout
@@ -194,7 +187,7 @@ const PatientProfile = (props) => {
                                         exact path="/doctor/profile/show-questions/" component={Notification}></Route>
                                         <Route exact path="/doctor/profile/my-posts/" component={MyPosts}></Route>
                                         <Route exact path="/doctor/profile/groups/" component={ProfileDisease}/>
-                                        <Route exact path="/doctor/profile/chat/" component={Chat}></Route>
+                                        <Route exact path="/doctor/profile/stats/" component={StatsPage} />
                                         <Route exact path="/doctor/profile/settings/" component={PatientSettings}/>
                                     </Switch>    
                                 </div>

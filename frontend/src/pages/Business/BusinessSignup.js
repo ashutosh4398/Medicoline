@@ -1,34 +1,26 @@
 import React,{useState} from 'react';
-import Navigation from '../../../components/Navbar/Navigation';
-import { Link } from 'react-router-dom';
+import Navigation from '../../components/Navbar/Navigation';
+import {Link} from 'react-router-dom';
+
+
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { BASEURL } from '../../shared/BASEURL';
+import './Business.scss';
 import Axios from 'axios';
-import { BASEURL } from '../../../shared/BASEURL';
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    Button
-} from 'reactstrap'
 
-import './PatientLogin.scss';
-const initialState = {
-    first_name: '',
-    first_nameError: '',
-    last_name: '',
-    last_nameError: '',
-    email: '',
-    emailError: '',
-    password: '',
-    passwordError: '',
-    confirm_password: '',
-    confirm_passwordError: '',
-    error: false,
-}
+const BusinessSignup = () => {
 
-const PatientSignup = () => {
+    const [signup, setSignup] = useState({
+        first_name: '',
+        last_name: '',
+        email: '',
+        emailError: null,
+        password: '',
+        passwordError: null,
+        confirm_password: '',
+        confirm_passwordError: null,
+    })
 
-    const [signup, setSignup] = useState(initialState);
     const [modal, setModal] = useState(false);
 
     const toggle = () => setModal(!modal);
@@ -41,7 +33,7 @@ const PatientSignup = () => {
                 </ModalHeader>
                 <ModalBody>
                     <p className="modal-p">
-                        Please login and experience a positive reform in social media
+                        Please login and continue growing your business
                     </p>
                 </ModalBody>
                 <ModalFooter className="text-center">
@@ -53,53 +45,34 @@ const PatientSignup = () => {
         )
         
     }
-    
 
     const formValidation = () => {
-        // basic form validation
-        const errorState = {
-            first_nameError: null,
-            last_nameError: null,
-            emailError: null,
+        const errors = {
             passwordError: null,
             confirm_passwordError: null,
             error: false,
         }
 
-        // regex for only alphabets
-        const regex = /[a-zA-Z]+/;
-        if (!regex.test(signup.first_name)) {
-            errorState.first_nameError = true;
-            errorState.error = true;
-        }
-        if (!regex.test(signup.last_name)) {
-            errorState.last_nameError = true;
-            errorState.error = true;
-        }
-
         if (signup.password.trim().length < 8) {
-            errorState.passwordError = 'Password too small';
-            errorState.error = true;
+            errors.passwordError = 'Password too short';
+            errors.error = true;
         }
 
         if (signup.password !== signup.confirm_password) {
-            errorState.confirm_passwordError = 'Passwords not matched';
-            errorState.error = true;
+            errors.confirm_passwordError = 'Passwords not matched';
+            errors.error = true;
         }
 
-        // 
-        setSignup({...signup,...errorState});
-        console.log(errorState.error);
-        return !errorState.error;
+        setSignup({...signup, ...errors});
+        return !errors.error
         
     }
 
-    const formHandling = e => {
+    const formHandling = (e) => {
         e.preventDefault();
-        if (formValidation()){ 
-            
-            // if the form is valid then make an api call
-            Axios.post(`${BASEURL}/api/patient/signup/`,{
+
+        if (formValidation()) {
+            Axios.post(`${BASEURL}/api/business/signup/`,{
                 first_name: signup.first_name,
                 last_name: signup.last_name,
                 email: signup.email,
@@ -121,30 +94,13 @@ const PatientSignup = () => {
             .catch(err => {
                 console.log(err.response);
             })
-        } else {
-            return;
         }
     }
-
 
     return (
         <div>
             {SuccessFeedBackModal()}
-            <Navigation classname='active' nav_items={[
-                {
-                    nav_item : 'Patient',
-                    nav_link : '/patient/login/'
-                },
-                {
-                    nav_item : 'Doctor',
-                    nav_link : '/doctor/login/'
-                },
-                {
-                    nav_item : 'Business',
-                    nav_link : '/business/login/'
-                }
-            ]} />
-
+            <Navigation classname="active"/>
             <section className="patient-login">
                 
                 <div className="patient-login__login-form">
@@ -154,25 +110,26 @@ const PatientSignup = () => {
                         
                         <p className="form-heading">Sign Up</p>
                         <p className="form-caption">
-                            Create account and start your journey towards ending the disease
+                            Create account and start growing your business today!
                         </p>
                         <form autoComplete="off" onSubmit={formHandling}>
                             <div className="form-row">
                                 <div className="col-md-6 col-12 form-group">
                                     <input required type="text" 
+                                    className="form-control"
+                                    placeholder="First Name"
                                     value={signup.first_name}
                                     onChange={e => setSignup({...signup,first_name: e.target.value})}
-                                    className={`form-control ${signup.first_nameError? 'border-danger' : ''}`} placeholder="First Name"/>
-                                    <p className={`${signup.first_nameError? 'text-danger': 'd-none' }`}>Please enter alphabets only</p>
+                                    />
                                 </div>
 
                                 <div className="col-md-6 col-12 form-group">
                                     <input required type="text" 
+                                    className="form-control"
+                                    placeholder="Last Name"
                                     value={signup.last_name}
                                     onChange={e => setSignup({...signup, last_name: e.target.value})}
-                                    className={`form-control ${signup.last_nameError? 'border-danger' : ''}`}
-                                     placeholder="Last Name"/>
-                                    <p className={`${signup.last_nameError? 'text-danger': 'd-none' }`}>Please enter alphabets only</p>
+                                    />
                                 </div>
                                 
                             </div>
@@ -210,15 +167,13 @@ const PatientSignup = () => {
                                 <button type="submit" className="btn cust_btn d-block mx-auto mt-5">Signup &rarr;</button>
                             </div>
                         </form>
-                        <Link to="/patient/login/" className="form-redirect">Already have an account ?</Link>
+                        <Link to="/business/login/" className="form-redirect">Already have an account ?</Link>
                     </div>
                     <div className="patient-login__illustration">
                         <div className="patient-login__info">
                             <h3 className="patient-login__info-heading">Benefits of Joining</h3>
                             <p className="patient-login__description">
-                                We at Medicoline try to share only true facts about the disease and most importantly all your questions will be answered by geniune doctors.
-                                So you can trust the suggestions without any doubt.
-                                
+                                We at Medicoline always try to support local businesses under our domain which helps your business to grow and also the patients during emergency.
                             </p>
                         </div>
                         
@@ -231,4 +186,4 @@ const PatientSignup = () => {
     );
 };
 
-export default PatientSignup;
+export default BusinessSignup;

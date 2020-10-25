@@ -19,9 +19,10 @@ import './PatientProfile.scss';
 import MyPosts from '../../components/MyPosts/MyPosts';
 import ProfileDisease from '../../components/ProfileDisease/ProfileDisease';
 import PatientSettings from '../../components/PatientSettings/PatientSettings';
-import Services from '../Services/Services';
+import PostListings from '../../components/PostListings/PostListings';
+import ListingPage from '../ListingPage/ListingPage';
 
-const PatientProfile = (props) => {
+const BusinessProfile = (props) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [currentSelected, setCurrentSelected] = useState(null);
@@ -31,8 +32,8 @@ const PatientProfile = (props) => {
     const {getToken,deleteToken,userDetails, setUserDetails} = useContext(TOKEN_HANDLER);
 
     // only allow patients to see patient portal and nobody else
-    if (!getToken() && localStorage.getItem('role') !== 'patient') {
-        history.push('/patient/login/');
+    if (!getToken() && localStorage.getItem('role') !== 'business') {
+        history.push('/business/login/');
     }
 
     useEffect(() => {
@@ -61,7 +62,7 @@ const PatientProfile = (props) => {
             nav_items={[
                 {
                     nav_item: userDetails?.username? `${userDetails.username}`: '',
-                    nav_link: '/patient/profile/'
+                    nav_link: '/business/profile/'
                 },
                 {
                     nav_item: 'Groups',
@@ -85,7 +86,7 @@ const PatientProfile = (props) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="patient-information__activity--group-selection">
+                        {/* <div className="patient-information__activity--group-selection">
                             <label htmlFor="group-select" className="font-weight-bold">Selected Group</label>
                             <select id="group-select" className="form-control">
                                 <option value="All" disabled selected>All</option>
@@ -96,7 +97,7 @@ const PatientProfile = (props) => {
                                 }
                                 
                             </select>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
@@ -107,36 +108,20 @@ const PatientProfile = (props) => {
                     <div className="user-profile__column user-profile__column--sidenav">
                         <div className="">
                             <ul className="side-nav">
-                                <Link to="/patient/profile/" onClick={() => setCurrentSelected('write')}>
+                                <Link to="/business/profile/" onClick={() => setCurrentSelected('write')}>
                                     <li className={`side-nav__item ${currentSelected === 'write'? 'side-nav__item--active' : ''}`}>
-                                        Write a POST
+                                        Create Listings
                                     </li>
                                 </Link>
 
-                                <Link to="/patient/profile/notification/" onClick={() => setCurrentSelected('notifications')}>
+                                <Link to="/business/profile/listings/" onClick={() => setCurrentSelected('notifications')}>
                                     <li className={`side-nav__item ${currentSelected === 'notifications'? 'side-nav__item--active' : ''}`}>
-                                        Notifications
+                                        My Listings
                                     </li>
                                 </Link>
 
-                                <Link to="/patient/profile/my-posts/" onClick={() => setCurrentSelected('posts')}>
-                                    <li className={`side-nav__item ${currentSelected === 'posts'? 'side-nav__item--active' : ''}`}>
-                                        Posts
-                                    </li>
-                                </Link>
-                                <Link to="/patient/profile/groups/" onClick={() => setCurrentSelected('groups')}>
-                                    <li className={`side-nav__item ${currentSelected === 'groups'? 'side-nav__item--active' : ''}`}>
-                                        Groups
-                                    </li>
-                                </Link>
-
-                                <Link to="/patient/profile/services/">
-                                    <li className="side-nav__item">
-                                        Services
-                                    </li>
-                                </Link>
-
-                                <Link to="/patient/profile/settings/" onClick={e => setCurrentSelected('settings')}>
+                                
+                                <Link to="/business/profile/settings/" onClick={e => setCurrentSelected('settings')}>
                                     <li className={`side-nav__item ${currentSelected === 'settings'? 'side-nav__item--active' : ''}`}>
                                         Settings
                                     </li>
@@ -162,40 +147,24 @@ const PatientProfile = (props) => {
                         </div>
                         <div className={`bg-menu ${isOpen ? 'menu-open' : '' }`}></div>
                         <div className={`open-menu-items ${isOpen? 'open-menu-items--active' : 'open-menu-items--inactive'}`}>
-                            <ul className="small-width-menu">
-                                <Link to="/patient/profile/" className="side-nav__item">
-                                    <li onClick={toggle}>Write a post</li>
-                                </Link>
-                                <Link className="side-nav__item" to="/patient/profile/notification/">
-                                    <li  onClick={toggle}>Notifications</li>
-                                </Link>
-                                <Link className="side-nav__item" to="/patient/profile/my-posts">
-                                    <li  onClick={toggle}>Posts</li>
-                                </Link>
-                                <Link className="side-nav__item" to="/patient/profile/groups/">
-                                    <li  onClick={toggle}>Groups</li>
-                                </Link>
-                                <Link className="side-nav__item" to="/patient/profile/services/">
-                                    <li  onClick={toggle}>Services</li>
-                                </Link>
-                                <Link className="side-nav__item" to="/patient/profile/settings/">
-                                    <li  onClick={toggle}>Settings</li>
-                                </Link>
-                                <Link className="side-nav__item" to="/patient/login/" onClick={deleteToken}>
-                                    <li  onClick={toggle}>Logout</li>
-                                </Link>
+                            <ul>
+                                <li onClick={toggle}>Write a post</li>
+                                <li onClick={toggle}>Notifications</li>
+                                <li onClick={toggle}>Posts</li>
+                                <li onClick={toggle}>Comments</li>
+                                <li onClick={toggle}>Groups</li>
+                                <li onClick={toggle}>Services</li>
+                                <li onClick={toggle}>Settings</li>
+                                <li onClick={toggle}>Logout</li>
                             </ul>
                         </div>
                         <main className="profile-main-content-container">
                             <div className="profile-main-content">
                                 <div className="profile-main-content__inner">
                                     <Switch>
-                                        <Route exact path="/patient/profile/" component={Posts}/>
-                                        <Route path="/patient/profile/notification/" component={Notification}></Route>
-                                        <Route path="/patient/profile/my-posts/" component={MyPosts}></Route>
-                                        <Route path="/patient/profile/groups/" component={ProfileDisease}/>
-                                        <Route path="/patient/profile/services/" component={Services}/>
-                                        <Route path="/patient/profile/settings/" component={PatientSettings}/>
+                                        <Route exact path="/business/profile/" component={PostListings}/>
+                                        <Route path="/business/profile/listings/" component={ListingPage} />
+                                        <Route path="/business/profile/settings/" component={PatientSettings}/>
                                     </Switch>    
                                 </div>
                                 
@@ -209,4 +178,4 @@ const PatientProfile = (props) => {
     );
 };
 
-export default PatientProfile;
+export default BusinessProfile;

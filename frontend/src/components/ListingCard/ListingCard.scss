@@ -1,0 +1,35 @@
+@import '../../sass/variables';
+
+.listing-card {
+    border: 2px solid black;
+    border-radius: 1rem;
+    box-shadow: 0 1.5rem 2rem rgba($color-black, .5);
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin: 1rem;
+    width: 45%;
+    
+
+    h2 {
+        font-weight: bold;
+        text-transform: uppercase;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 45%;
+    }
+}
+
+.listing-detail-card {
+    .btn {
+        font-size: 1.5rem;
+    }
+
+    &__details {
+        padding: 1rem;
+        border: 2px solid black;
+        margin: 2rem 0;
+        border-radius: 1rem;
+    }
+}

@@ -33,7 +33,7 @@ const Navigation = ({nav_items=[
     },
     {
         nav_item : 'Business',
-        nav_link : '/patient/business/'
+        nav_link : '/business/login/'
     }
 ],classname=''}) => {
     const [isOpen, setIsOpen] = useState(false);

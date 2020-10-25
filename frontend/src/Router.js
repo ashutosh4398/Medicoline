@@ -9,6 +9,10 @@ import PatientLogin from './pages/Patient/PatientLogin/PatientLogin';
 import PatientSignup from './pages/Patient/PatientLogin/PatientSignup';
 import PatientProfile from './pages/profile/PatientProfile';
 import DoctorProfile from './pages/profile/DoctorProfile';
+import BusinessSignup from './pages/Business/BusinessSignup';
+import BusinessLogin from './pages/Business/BusinessLogin';
+import BusinessProfile from './pages/profile/BusinessProfile';
+import ListingPage from './pages/ListingPage/ListingPage';
 
 export const Router = () => {
     return (
@@ -25,6 +29,10 @@ export const Router = () => {
                 <Route path="/doctor/signup/" component={DoctorSignup}/>
                 <Route path="/doctor/login/" component={DoctorLogin}/>
                 <Route path="/doctor/profile/" component={DoctorProfile}/>
+
+                <Route path="/business/login/" component={BusinessLogin} />
+                <Route path="/business/signup/" component={BusinessSignup} />
+                <Route path="/business/profile/" component={BusinessProfile}/>
                 
             </Switch>
         </BrowserRouter>

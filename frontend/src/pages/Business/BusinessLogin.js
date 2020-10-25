@@ -1,13 +1,13 @@
 import React, {useState, useContext} from 'react';
-import Navigation from '../../../components/Navbar/Navigation';
-import patient_img from '../../../assets/patient.png';
+import Navigation from '../../components/Navbar/Navigation';
+import business_svg from '../../assets/business_svg.svg';
 import Axios from 'axios';
-import './PatientLogin.scss';
-import { Link, useHistory } from 'react-router-dom';
-import { BASEURL } from '../../../shared/BASEURL';
-import { TOKEN_HANDLER } from '../../../shared/TOKEN_HANDLER';
 
-const PatientLogin = () => {
+import { Link, useHistory } from 'react-router-dom';
+import { BASEURL } from '../../shared/BASEURL';
+import { TOKEN_HANDLER } from '../../shared/TOKEN_HANDLER';
+
+const BusinessLogin = () => {
     const [login, setLogin] = useState({
         email: '',
         password: '',
@@ -24,13 +24,13 @@ const PatientLogin = () => {
         Axios.post(`${BASEURL}/api/login/`, {
             email: login.email,
             password: login.password,
-            status: 'patient'
+            status: 'business'
         })
         .then(resp => {
             StoreToken(resp.data?.token);
             setLogin({...login,error: false});
-            localStorage.setItem('role','patient');
-            history.push('/patient/profile/');
+            localStorage.setItem('role','business');
+            history.push('/business/profile/');
         })
         .catch(err => {
             if (err.response.status === 400) {
@@ -40,7 +40,7 @@ const PatientLogin = () => {
     }
 
     if (getToken()) {
-        history.push('/patient/profile/');
+        history.push('/business/profile/');
     }
 
     return (
@@ -66,7 +66,7 @@ const PatientLogin = () => {
                     <div className="patient-login__form">
                         <p className="form-heading">Sign in</p>
                         <p className="form-caption">
-                            Stay connected and continue tackling the disease together.
+                            Stay connected and continue growing.
                         </p>
                         <form autoComplete="off" onSubmit={formHandling}>
                             <div className="form-group">
@@ -88,10 +88,10 @@ const PatientLogin = () => {
                                 <button type="submit" className="btn cust_btn d-block mx-auto mt-5">Login &rarr;</button>
                             </div>
                         </form>
-                        <Link to="/patient/signup/" className="form-redirect">Create an account ?</Link>
+                        <Link to="/business/signup/" className="form-redirect">Create an account ?</Link>
                     </div>
                     <div className="patient-login__illustration">
-                        <img src={patient_img} alt="patient"/>
+                        <img src={business_svg} alt="patient"/>
                         
                     </div>
                     
@@ -101,4 +101,4 @@ const PatientLogin = () => {
     );
 };
 
-export default PatientLogin;
+export default BusinessLogin;

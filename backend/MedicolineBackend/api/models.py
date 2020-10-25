@@ -100,7 +100,27 @@ class Notifications(models.Model):
         return f"{self.text}"
 
 class Business(models.Model):
-    pass
+    user = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
 
 class Listings(models.Model):
-    pass
+    SERVICES = (
+        ('medical','medical'),
+        ('hospital','hospital'),
+        ('clinic','clinic')
+    )
+
+    business = models.ForeignKey(Business, on_delete = models.CASCADE)
+    
+    listing_name = models.CharField(max_length = 100)
+    services = models.CharField(max_length = 100, choices = SERVICES)
+    country = models.CharField(max_length = 50)
+    state = models.CharField(max_length = 50)
+    city = models.CharField(max_length = 50)
+
+    description = HTMLField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('business','listing_name')
+
+    def __str__(self):
+        return f"{self.listing_name}"

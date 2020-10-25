@@ -28,5 +28,13 @@ urlpatterns = [
     path('doctor/specialization/',api_view.SpecializationView.as_view()),
     path('doctor/show-questions/',api_view.ShowAllQuestionsView.as_view()),
 
-    
+    path('doctor/statistics/',api_view.StatisticsView.as_view()),
+    path('doctor/statistics/<str:option>/',api_view.StatisticsView.as_view()),
+    path('doctor/statistics/<str:option>/<str:group>/',api_view.StatisticsView.as_view()),
+
+    # business
+    path('business/signup/',api_view.BusinessSignupSerializer.as_view()),
+    path('business/listing/',api_view.PostBusinessListing.as_view()),
+    path('business/listing/<int:listing_id>/',api_view.PostBusinessListing.as_view()),
+    path('business/listing/<str:country>/<str:state>/<str:city>/',api_view.ListingFilterView.as_view()),   
 ]

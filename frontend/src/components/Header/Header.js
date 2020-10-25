@@ -19,7 +19,7 @@ const Header = () => {
                 },
                 {
                     nav_item : 'Business',
-                    nav_link : '/patient/business/'
+                    nav_link : '/business/login/'
                 }
             ]} />
             <div className="header__sub">
@@ -32,7 +32,6 @@ const Header = () => {
                         </p>
                         <div className="feature-box__button-group">
                             <Link to="/diseases/" className="cust_btn">Checkout Groups</Link>
-                            <a href="#" className="cust_btn">Disease prediction</a>
                         </div>
                     </div>
                 </div>

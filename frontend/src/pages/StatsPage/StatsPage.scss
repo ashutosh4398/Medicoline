@@ -1,0 +1,19 @@
+.statistics {
+    fieldset {
+        border: 2px solid black;
+        padding: 2rem;
+    }
+
+    legend {
+        padding: 0 1rem;
+        border-radius: 1rem;
+    }
+
+    .bar-group {
+        &:not(:last-child) {
+            padding: 2rem 0;
+            margin: 2rem 0;
+            border-bottom: 1px solid black;
+        }
+    }
+}

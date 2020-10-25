@@ -1,0 +1,25 @@
+@import '../../sass/variables';
+
+.services {
+    font-size: 1.5rem;
+    
+    &--flex {
+        margin-top: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    
+    input,select {
+        font-size: inherit;
+    }
+
+    &__cards {
+        flex: 0 0 45%;
+        border: 2px solid black;
+        border-radius: 1rem;
+        padding: 2rem;
+        margin: 1rem;
+        box-shadow: 0 1.2rem 5rem rgba($color-black, .2);
+    }
+}

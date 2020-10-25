@@ -221,3 +221,31 @@ class PostCommentSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(detail="some error",code=400)
         
         raise serializers.ValidationError(detail='Post not found',code=400)
+
+
+class ListingSignupSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Listings
+        fields = ['id','listing_name','services','country','state','city','description']
+    
+    def create(self, validated_data):
+        user = self.context.get('user')
+        business = get_model_object(models.Business, {'user': user})
+        if business:
+            try:
+                listing = models.Listings.objects.create(
+                    business = business,
+                    listing_name = validated_data.get('listing_name'),
+                    services = validated_data.get('services'),
+                    country = validated_data.get('country'),
+                    state = validated_data.get('state'),
+                    city = validated_data.get('city'),
+                    description = validated_data.get('description')
+                )
+
+                return listing
+            except Exception as e:
+                
+                raise serializers.ValidationError(detail='already exists',code=400)
+        raise serializers.ValidationError(detail="business account not found",code=400)
