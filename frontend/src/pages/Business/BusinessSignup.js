@@ -26,10 +26,6 @@ const BusinessSignup = () => {
     const history = useHistory()
 
 
-    if (!getToken() && localStorage.getItem('role') !== 'business') {
-        history.push('/business/login/');
-    }
-
     if (getToken() && localStorage.getItem('role') === 'business') {
         history.push('/business/profile/');
     }
